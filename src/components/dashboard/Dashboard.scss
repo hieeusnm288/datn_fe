@@ -1,0 +1,49 @@
+.dasboard {
+    position: relative;
+
+    .left-site {
+        width             : 300px;
+        background-color  : #fff;
+        position          : absolute;
+        -webkit-transition: 0.2s ease-in;
+        transition        : 0.2s ease-in;
+        height            : 100%;
+        z-index           : 11;
+        border-right      : 1px solid rgb(199, 222, 247);
+        height            : 100vh;
+    }
+
+    .brand-name {
+        min-height: 70px;
+        padding   : 0 24px;
+
+    }
+
+    .ant-menu-title-content {
+        font-size: 15px;
+    }
+
+    .body-wrapper {
+        position   : relative;
+        margin-left: 300px;
+        height     : 100vh;
+
+        .app-header {
+            position  : relative;
+            z-index   : 50;
+            width     : 100%;
+            background: #fff;
+            padding   : 0 25px;
+
+            // width     : calc(100% - 300px);
+            border-bottom: 1px solid rgb(199, 222, 247);
+
+            .navbar {
+                min-height: 70px;
+                padding   : 0;
+            }
+        }
+    }
+
+
+}
