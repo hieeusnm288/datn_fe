@@ -3,18 +3,18 @@ import { Button, Form, Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import "./loginstyle.scss";
 import { useDispatch } from "react-redux";
-import { loginAccount } from "../../../redux/slice/accountSlice";
+import { loginNhanVien } from "../../../redux/slice/nhanvienSlice";
 function LoginPage() {
   const dispatch = useDispatch();
   const onFinish = (values) => {
-    dispatch(loginAccount(values)).then((res) => {
+    dispatch(loginNhanVien(values)).then((res) => {
       if (res.payload) {
         notification.open({
           message: "Đăng nhập thành công!",
           description: "Bạn đã đăng nhập thành khoản thành công!",
           type: "success",
         });
-        navigate("/");
+        navigate("/admin/dashboard");
         localStorage.setItem("token", JSON.stringify(res.payload.jwt));
       } else {
         notification.open({

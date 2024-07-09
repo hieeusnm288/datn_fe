@@ -1,31 +1,27 @@
-import React, { useEffect } from "react";
-import withRouter from "../../helpers/withRouter";
-import { Button, Form, Input, Select, Space, notification } from "antd";
-
+import React, { useState, useEffect } from "react";
+import { Button, Form, Input, Space, notification, Select } from "antd";
 import {
-  getCategory,
-  insertCategory,
-  updateCategory,
-} from "../../redux/slice/categorySlice";
+  getMauSac,
+  insertMauSac,
+  updateMauSac,
+} from "../../redux/slice/mausacSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-const { Option } = Select;
-
-function AddOrEdit() {
+function AddMauSac() {
   const [form] = Form.useForm();
+  const { Option } = Select;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-
   const onFinish = (values) => {
     if (id) {
       form.validateFields().then((values) => {
         dispatch(
-          updateCategory({
-            name: values.name,
-            id: Number(id),
-            status: values.status,
+          updateMauSac({
+            id: id,
+            tenmausac: values.tenmausac,
+            trangthai: values.trangthai,
           })
         ).then((res) => {
           if (res.payload) {
@@ -34,42 +30,48 @@ function AddOrEdit() {
               description: "Dữ liệu đã được cập nhật",
               type: "success",
             });
-            navigate("/admin/list-category");
+            navigate("/admin/list-mausac");
           }
         });
       });
     } else {
-      dispatch(insertCategory(values)).then((res) => {
-        if (res.payload) {
-          notification.open({
-            message: "Thành công!",
-            description: "Dữ liệu đã được cập nhật",
-            type: "success",
-          });
-          navigate("/admin/list-category");
-        }
+      form.validateFields().then((values) => {
+        dispatch(
+          insertMauSac({
+            tenmausac: values.tenmausac,
+            trangthai: values.trangthai,
+          })
+        ).then((res) => {
+          if (res.payload) {
+            notification.open({
+              message: "Thành công!",
+              description: "Dữ liệu đã được cập nhật",
+              type: "success",
+            });
+            navigate("/admin/list-mausac");
+          }
+        });
       });
     }
   };
-
   useEffect(() => {
     if (id) {
-      dispatch(getCategory(id)).then((res) => {
+      dispatch(getMauSac(id)).then((res) => {
+        console.log(res);
         if (id) {
           form.setFieldsValue({
-            name: res.payload.name,
-            status: res.payload.status === "Invisible" ? 1 : 0,
+            tenmausac: res?.payload?.result.tenmausac,
+            trangthai: res?.payload?.result.trangthai,
           });
         }
       });
     } else {
       form.setFieldsValue({
-        name: "",
-        status: 0,
+        tenmausac: "",
+        trangthai: "",
       });
     }
-  }, [dispatch, form, id]);
-
+  }, [id, form, dispatch]);
   return (
     <div className="add-category">
       <div
@@ -81,9 +83,7 @@ function AddOrEdit() {
         }}
       >
         <div className="card-body">
-          <h5 className="card-title fw-semibold mb-4">
-            {id ? "Update Category" : "Add Category"}
-          </h5>
+          <h5 className="card-title fw-semibold mb-4">Thêm mới Màu Sắc</h5>
           <div
             className="card"
             style={{
@@ -100,8 +100,8 @@ function AddOrEdit() {
                 layout="vertical"
               >
                 <Form.Item
-                  name="name"
-                  label="Category Name"
+                  name="tenmausac"
+                  label="Tên Màu Sắc"
                   rules={[
                     {
                       required: true,
@@ -111,45 +111,20 @@ function AddOrEdit() {
                   <Input />
                 </Form.Item>
                 <Form.Item
-                  name="status"
-                  label="Status"
+                  name="trangthai"
+                  label="Trạng Thái"
                   rules={[
                     {
                       required: true,
                     },
                   ]}
                 >
-                  <Select
-                    placeholder="Select a option and change input text above"
-                    // onChange={onGenderChange}
-                    allowClear
-                  >
-                    <Option value={0}>Visible</Option>
-                    <Option value={1}>Invisible</Option>
+                  <Select placeholder="Chọn Giới tính">
+                    <Option value={1}>Visible</Option>
+                    <Option value={0}>Invisible</Option>
                   </Select>
                 </Form.Item>
-                <Form.Item
-                  noStyle
-                  shouldUpdate={(prevValues, currentValues) =>
-                    prevValues.gender !== currentValues.gender
-                  }
-                >
-                  {({ getFieldValue }) =>
-                    getFieldValue("gender") === "other" ? (
-                      <Form.Item
-                        name="customizeGender"
-                        label="Customize Gender"
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <Input />
-                      </Form.Item>
-                    ) : null
-                  }
-                </Form.Item>
+
                 <Form.Item>
                   <Space>
                     <Button type="primary" htmlType="submit">
@@ -166,4 +141,4 @@ function AddOrEdit() {
   );
 }
 
-export default withRouter(AddOrEdit);
+export default AddMauSac;

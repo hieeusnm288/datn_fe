@@ -16,7 +16,6 @@ import { MdDelete, MdModeEditOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getListProduct } from "../../redux/slice/productSlice";
 import { useNavigate } from "react-router-dom";
-import { getListCate } from "../../redux/slice/categorySlice";
 import { getListBrand } from "../../redux/slice/brandSlice";
 
 function ListProduct() {
@@ -26,7 +25,6 @@ function ListProduct() {
   const dispatch = useDispatch();
   const [nameSreach, setNameSearch] = useState("");
   const { ListProduct, totalElements } = useSelector((state) => state.product);
-  const { listCategory } = useSelector((state) => state.category);
   const { listBrand } = useSelector((state) => state.brand);
   const [search, setSearch] = useState({
     name: "",
@@ -37,16 +35,6 @@ function ListProduct() {
   useEffect(() => {
     dispatch(getListProduct(search));
   }, [dispatch, search]);
-
-  useEffect(() => {
-    dispatch(getListCate(0));
-    dispatch(
-      getListBrand({
-        query: "",
-        page: 0,
-      })
-    );
-  }, [dispatch]);
 
   const navigate = useNavigate();
   const showModal = (product) => {
@@ -212,15 +200,6 @@ function ListProduct() {
     });
   };
 
-  const onChangCate = (value) => {
-    setSearch({
-      name: search.name,
-      categoryId: value === 0 ? "" : value,
-      brandId: search.brandId === 0 ? "" : search.brandId,
-      page: 0,
-    });
-  };
-
   return (
     <div>
       <div className="row mb-3">
@@ -238,21 +217,6 @@ function ListProduct() {
         <div className="col-6">
           <div className="row">
             <div className="col-6">
-              <label className="form-label">Filter by Category</label>
-              <br />
-              <Select
-                placeholder="Select a Category"
-                onChange={onChangCate}
-                style={{ width: "100%" }}
-                allowClear
-              >
-                <Option value={0}>All</Option>
-                {listCategory?.map((i) => (
-                  <Option value={i.id}>{i.name}</Option>
-                ))}
-              </Select>
-            </div>
-            <div className="col-6">
               <label className="form-label">Filter by Brand</label>
               <br />
               <Select
@@ -264,7 +228,7 @@ function ListProduct() {
               >
                 <Option value={0}>All</Option>
                 {listBrand?.map((i) => (
-                  <Option value={i.id}>{i.name}</Option>
+                  <Option value={i.idThuongHieu}>{i.tenthuonghieu}</Option>
                 ))}
               </Select>
             </div>

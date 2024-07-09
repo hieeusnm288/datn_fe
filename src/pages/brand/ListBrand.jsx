@@ -13,6 +13,8 @@ import {
   Row,
   Col,
   Upload,
+  Tag,
+  Select,
 } from "antd";
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,15 +32,15 @@ function ListBrand() {
   const [brandDetail, setBrandDetail] = useState();
   const dispatch = useDispatch();
   const { listBrand, totalElements } = useSelector((state) => state.brand);
-
+  const { Option } = Select;
   const [key, setKey] = useState({
     query: "",
     page: 0,
   });
   const [form] = Form.useForm();
   useEffect(() => {
-    dispatch(getListBrand(key));
-  }, [key, dispatch, form]);
+    dispatch(getListBrand());
+  }, [dispatch, form]);
 
   const showModal = (brand) => {
     setIsModalOpen(true);
@@ -47,7 +49,7 @@ function ListBrand() {
   const [nameSreach, setNameSearch] = useState("");
   const handleOk = () => {
     setIsModalOpen(false);
-    dispatch(deleteBrand(brandDetail?.id)).then((res) => {
+    dispatch(deleteBrand(brandDetail?.idThuongHieu)).then((res) => {
       if (res.payload) {
         notification.open({
           message: "Thành công!",
@@ -58,7 +60,7 @@ function ListBrand() {
           query: "",
           page: 0,
         });
-        dispatch(getListBrand(key));
+        dispatch(getListBrand());
       }
     });
   };
@@ -67,8 +69,10 @@ function ListBrand() {
     form.validateFields().then((values) => {
       dispatch(
         updateBrand({
-          id: values.id,
-          name: values.name,
+          idThuongHieu: values.idThuongHieu,
+          tenthuonghieu: values.tenthuonghieu,
+          mota: values.mota,
+          trangthai: values.trangthai,
           logoFile: values.logoFile,
         })
       ).then((res) => {
@@ -79,11 +83,7 @@ function ListBrand() {
             type: "success",
           });
           // setBrandDetail(null);
-          setKey({
-            query: "",
-            page: 0,
-          });
-          dispatch(getListBrand(key));
+          dispatch(getListBrand());
         }
       });
     });
@@ -98,12 +98,14 @@ function ListBrand() {
   const handleEdit = (brand) => {
     setIsModalUpdateOpen(true);
     form.setFieldsValue({
-      id: brand.id,
-      name: brand.name,
+      idThuongHieu: brand.idThuongHieu,
+      tenthuonghieu: brand.tenthuonghieu,
+      mota: brand.mota,
+      trangthai: brand.trangthai,
       logoFile: [
         {
           url: brand
-            ? `https://springbe-production.up.railway.app/api/v1/brand/logo/${brand.logo}`
+            ? `http://localhost:8080/api/v1/thuonghieu/logo/${brand.hinhanh}`
             : "",
         },
       ],
@@ -129,10 +131,30 @@ function ListBrand() {
       render: (val, record, index) => <>{index + 1}</>,
     },
     {
-      title: "Name",
-      dataIndex: "name",
+      title: "Tên Thương Hiệu",
+      dataIndex: "tenthuonghieu",
       key: "name",
       width: 900,
+    },
+    {
+      title: "Mô tả",
+      dataIndex: "mota",
+      key: "name",
+      width: 500,
+    },
+    {
+      title: "Trạng Thái",
+      dataIndex: "status",
+      key: "status",
+      width: 300,
+      render: (_, record) => (
+        <Tag
+          color={record.trangthai === 1 ? "green" : "red"}
+          key={record.status}
+        >
+          {record.trangthai === 1 ? "Visible" : "Invisible"}
+        </Tag>
+      ),
     },
     {
       title: "Logo",
@@ -140,7 +162,7 @@ function ListBrand() {
       key: "logo",
       render: (_, record) => (
         <Image
-          src={`https://springbe-production.up.railway.app/api/v1/brand/logo/${record.logo}`}
+          src={`http://localhost:8080/api/v1/thuonghieu/logo/${record.hinhanh}`}
           width={50}
         />
       ),
@@ -202,7 +224,7 @@ function ListBrand() {
           <Button onClick={onSearch}>Search</Button>
         </Col>
       </Row>
-      <p>List Brand</p>
+      <h2>Danh Sách Thương Hiệu</h2>
       <Table columns={columns} dataSource={listBrand} pagination={false} />
       <Pagination
         total={totalElements}
@@ -216,7 +238,9 @@ function ListBrand() {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <p>Bạn có muốn xóa Brand: {brandDetail ? brandDetail.name : ""}</p>
+        <p>
+          Bạn có muốn xóa Brand: {brandDetail ? brandDetail.tenthuonghieu : ""}
+        </p>
       </Modal>
       <Modal
         title="Update"
@@ -234,7 +258,7 @@ function ListBrand() {
           }}
         >
           <Form.Item
-            name="id"
+            name="idThuongHieu"
             label="Brand Id"
             // initialValue={brandDetail ? brandDetail.id : ""}
             rules={[
@@ -246,8 +270,8 @@ function ListBrand() {
             <Input disabled />
           </Form.Item>
           <Form.Item
-            name="name"
-            label="Brand Name"
+            name="tenthuonghieu"
+            label="Tên Thương Hiệu"
             // initialValue={brandDetail ? brandDetail.name : ""}
             rules={[
               {
@@ -256,6 +280,31 @@ function ListBrand() {
             ]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="mota"
+            label="Mô tả"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="trangthai"
+            label="Trạng Thái"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Select placeholder="Chọn Trạng Thái">
+              <Option value={1}>Visible</Option>
+              <Option value={0}>Invisible</Option>
+            </Select>
           </Form.Item>
           <Form.Item
             label="Upload Logo"

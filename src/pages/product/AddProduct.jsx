@@ -5,7 +5,6 @@ import { Button, Form, Input, Select, Space, Upload, notification } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getListCate } from "../../redux/slice/categorySlice";
 import { getListBrand } from "../../redux/slice/brandSlice";
 import {
   getDetailProduct,
@@ -16,7 +15,7 @@ import withRouter from "../../helpers/withRouter";
 const { Option } = Select;
 function AddProduct() {
   const [specifications, setSpecifications] = useState("");
-  const { listCategory } = useSelector((state) => state.category);
+
   const { listBrand } = useSelector((state) => state.brand);
   const [description, setDescription] = useState("");
   const [form] = Form.useForm();
@@ -79,43 +78,6 @@ function AddProduct() {
       });
     }
   };
-  useEffect(() => {
-    if (id) {
-      dispatch(getDetailProduct(id)).then((res) => {
-        if (id) {
-          form.setFieldsValue({
-            name: res.payload.name,
-            status: res.payload.status,
-            price: res.payload.price,
-            quantity: res.payload.quantity,
-            category: res.payload.category.id,
-            brand: res.payload.brand.id,
-            productFile: [
-              {
-                url: res.payload.image
-                  ? `https://springbe-production.up.railway.app/api/v1/product/image/${res.payload.image}`
-                  : "",
-              },
-            ],
-          });
-          // setProductDetail(res.payload);
-          setDescription(res.payload.description);
-          setSpecifications(res.payload.specifications);
-        }
-      });
-    } else {
-      form.setFieldsValue({
-        name: "",
-        status: 0,
-        price: "",
-        quantity: "",
-        category_id: 1,
-        brand_id: 1,
-      });
-      setDescription("");
-      setSpecifications("");
-    }
-  }, [dispatch, form, id]);
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
@@ -126,16 +88,6 @@ function AddProduct() {
     }
     return e && e.fileList;
   };
-
-  useEffect(() => {
-    dispatch(getListCate(0));
-    dispatch(
-      getListBrand({
-        query: "",
-        page: 0,
-      })
-    );
-  }, [dispatch]);
 
   return (
     <div className="add-product">
@@ -180,27 +132,7 @@ function AddProduct() {
                       <Input />
                     </Form.Item>
                   </div>
-                  <div className="col-6">
-                    <Form.Item
-                      name="category"
-                      label="Category"
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
-                    >
-                      <Select
-                        placeholder="Select a option and change input text above"
-                        // onChange={onGenderChange}
-                        allowClear
-                      >
-                        {listCategory?.map((i) => (
-                          <Option value={i.id}>{i.name}</Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                  </div>
+
                   <div className="col-6">
                     <Form.Item
                       name="quantity"

@@ -4,15 +4,25 @@ import CartPage from "../pages/CartPage/CartPage";
 import DetailProduct from "../pages/DetailProduct/DetailProduct";
 import LoginPage from "../pages/Login/FormLogin/LoginPage";
 import Register from "../pages/Login/RegisterForm/Register";
+import AddPTTT from "../pages/PhuongThucTT/AddPTTT";
+import ListPTTT from "../pages/PhuongThucTT/ListPTTT";
 import AddOrEditBrand from "../pages/brand/AddOrEditBrand";
 import ListBrand from "../pages/brand/ListBrand";
-import AddOrEdit from "../pages/category/AddOrEdit";
-import ListCatagories from "../pages/category/ListCatagories";
+import AddDeGiay from "../pages/degiay/AddDeGiay";
+import ListDeGiay from "../pages/degiay/ListDeGiay";
 import DashboardPage from "../pages/home/DashboardPage";
+import AddKM from "../pages/khuyenmai/AddKM";
+import ListKM from "../pages/khuyenmai/ListKM";
+import AddKichCo from "../pages/kichco/AddKichCo";
+import ListKichCo from "../pages/kichco/ListKichCo";
 import DetailOrder from "../pages/listIOrderClinet/DetailOrder";
 import ListOrderClient from "../pages/listIOrderClinet/ListOrderClient";
 import ListOrderAdmin from "../pages/listorderadmin/ListOrderAdmin";
 import ListProductClient from "../pages/listproductclent/ListProductClient";
+import AddMauSac from "../pages/mausac/AddMauSac";
+import ListMauSac from "../pages/mausac/ListMauSac";
+import ListNhanVien from "../pages/nhanvien/ListNhanVien";
+import ThemNhanVien from "../pages/nhanvien/ThemNhanVien";
 import AddProduct from "../pages/product/AddProduct";
 import ListProduct from "../pages/product/ListProduct";
 
@@ -21,18 +31,18 @@ const adminRouter = [
 
   // Router Category
   {
-    path: "/admin/list-category",
-    component: ListCatagories,
+    path: "/admin/list-nhanvien",
+    component: ListNhanVien,
     layout: Dashboard,
   },
   {
-    path: "/admin/category/add",
-    component: AddOrEdit,
+    path: "/admin/nhanvien/add",
+    component: ThemNhanVien,
     layout: Dashboard,
   },
   {
-    path: "/admin/category/add/:id",
-    component: AddOrEdit,
+    path: "/admin/nhanvien/add/:id",
+    component: ThemNhanVien,
     layout: Dashboard,
   },
 
@@ -69,6 +79,81 @@ const adminRouter = [
     component: ListOrderAdmin,
     layout: Dashboard,
   },
+  {
+    path: "/admin/khuyenmai/add",
+    component: AddKM,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/khuyenmai/add/:id",
+    component: AddKM,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/list-khuyenmai",
+    component: ListKM,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/degiay/add",
+    component: AddDeGiay,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/degiay/add/:id",
+    component: AddDeGiay,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/list-degiay",
+    component: ListDeGiay,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/kichco/add",
+    component: AddKichCo,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/kichco/add/:id",
+    component: AddKichCo,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/list-kichco",
+    component: ListKichCo,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/mausac/add",
+    component: AddMauSac,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/mausac/add/:id",
+    component: AddMauSac,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/list-mausac",
+    component: ListMauSac,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/pttt/add",
+    component: AddPTTT,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/pttt/add/:id",
+    component: AddPTTT,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/list-pttt",
+    component: ListPTTT,
+    layout: Dashboard,
+  },
   //Tài Khoản
   // {
   //   path: "/user-account-management",
@@ -78,7 +163,7 @@ const adminRouter = [
 ];
 
 const publicRouter = [
-  { path: "/login", component: LoginPage, layout: null },
+  { path: "/admin/login", component: LoginPage, layout: null },
   { path: "/register", component: Register, layout: null },
   {
     path: "/",

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import logo from "../../image/logo.svg";
+import logo from "../../image/logo.png";
 import "./Dashboradcline.scss";
 import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
-import { getListCate } from "../../redux/slice/categorySlice";
 import { getListBrand } from "../../redux/slice/brandSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -11,13 +10,12 @@ import { jwtDecode } from "jwt-decode";
 function DashbordClient({ children }) {
   const dispatch = useDispatch();
   const [username, setUsername] = useState();
-  const { listCategory } = useSelector((state) => state.category);
+  // const { listCategory } = useSelector((state) => state.category);
   const { listBrand } = useSelector((state) => state.brand);
   const [listCart, setListCart] = useState(
     JSON.parse(localStorage.getItem("cartItems")) || []
   );
   useEffect(() => {
-    dispatch(getListCate(0));
     dispatch(
       getListBrand({
         query: "",
@@ -27,9 +25,9 @@ function DashbordClient({ children }) {
   }, [dispatch]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setListCart(JSON.parse(localStorage.getItem("cartItems")));
-  }, [listCart]);
+  // useEffect(() => {
+  //   setListCart(JSON.parse(localStorage.getItem("cartItems")));
+  // }, [listCart]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -71,7 +69,12 @@ function DashbordClient({ children }) {
       <div className="main">
         <div className="header">
           <img src={logo} alt="" />
-
+          <div className="menu-header">
+            <p>Home</p>
+            <p>Shop</p>
+            <p>About Us</p>
+            <p>Contact Us</p>
+          </div>
           <div className="icons">
             <Badge count={listCart?.length}>
               <ShoppingCartOutlined
@@ -104,7 +107,7 @@ function DashbordClient({ children }) {
                 >
                   All
                 </p>
-                {listCategory?.map((i) => (
+                {/* {listCategory?.map((i) => (
                   <p
                     className="category-name"
                     onClick={() =>
@@ -115,7 +118,7 @@ function DashbordClient({ children }) {
                   >
                     {i.name}
                   </p>
-                ))}
+                ))} */}
               </div>
               <div className="sidebar-content">
                 <h2>Brand</h2>

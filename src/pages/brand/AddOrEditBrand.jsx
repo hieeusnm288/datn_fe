@@ -1,4 +1,4 @@
-import { Button, Form, Input, Space, Upload, notification } from "antd";
+import { Button, Form, Input, Select, Space, Upload, notification } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { getDetailBrand, insertBrand } from "../../redux/slice/brandSlice";
 import { useDispatch } from "react-redux";
@@ -20,7 +20,9 @@ function AddOrEditBrand() {
     form.validateFields().then((values) => {
       dispatch(
         insertBrand({
-          name: values.name,
+          tenthuonghieu: values.tenthuonghieu,
+          mota: values.mota,
+          trangthai: values.trangthai,
           logoFile: values.logoFile,
         })
       ).then((res) => {
@@ -63,7 +65,7 @@ function AddOrEditBrand() {
     }
     return e && e.fileList;
   };
-
+  const { Option } = Select;
   return (
     <div className="add-category">
       <div
@@ -85,10 +87,15 @@ function AddOrEditBrand() {
             }}
           >
             <div className="card-body">
-              <Form form={form} name="control-hooks" onFinish={onFinish}>
+              <Form
+                form={form}
+                name="control-hooks"
+                onFinish={onFinish}
+                layout="vertical"
+              >
                 <Form.Item
-                  name="name"
-                  label="Brand Name"
+                  name="tenthuonghieu"
+                  label="Tên Thương Hiệu"
                   rules={[
                     {
                       required: true,
@@ -96,6 +103,31 @@ function AddOrEditBrand() {
                   ]}
                 >
                   <Input />
+                </Form.Item>
+                <Form.Item
+                  name="mota"
+                  label="Mô tả"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name="trangthai"
+                  label="Trạng Thái"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Select placeholder="Chọn Trạng Thái">
+                    <Option value={1}>Visible</Option>
+                    <Option value={0}>Invisible</Option>
+                  </Select>
                 </Form.Item>
                 <Form.Item
                   label="Upload Logo"

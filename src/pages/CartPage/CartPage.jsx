@@ -13,9 +13,9 @@ function CartPage() {
   const [payment, setPayment] = useState(false);
   const [username, setUsername] = useState();
   const navigate = useNavigate();
-  useEffect(() => {
-    setCartItems(JSON.parse(localStorage.getItem("cartItems")));
-  }, [cartItems]);
+  // useEffect(() => {
+  //   setCartItems(JSON.parse(localStorage.getItem("cartItems")));
+  // }, [cartItems]);
   const [form] = Form.useForm();
   useEffect(() => {
     const token = localStorage.getItem("token");

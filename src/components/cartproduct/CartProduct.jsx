@@ -5,9 +5,9 @@ function CartProduct({ product }) {
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem("cartItems")) || []
   );
-  useEffect(() => {
-    setCartItems(JSON.parse(localStorage.getItem("cartItems")));
-  }, [cartItems]);
+  // useEffect(() => {
+  //   setCartItems(JSON.parse(localStorage.getItem("cartItems")));
+  // }, [cartItems]);
 
   const deleteProct = (id) => {
     const newItems = cartItems.filter((item) => item.id !== id);

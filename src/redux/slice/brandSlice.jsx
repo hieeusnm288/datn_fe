@@ -66,7 +66,7 @@ const brandSlice = createSlice({
       })
       .addCase(getListBrand.fulfilled, (state, action) => {
         state.loadingBrand = false;
-        state.listBrand = action.payload.content;
+        state.listBrand = action.payload.result;
         state.totalPages = action.payload.totalPages;
         state.number = action.payload.number;
         state.totalElements = action.payload.totalElements;

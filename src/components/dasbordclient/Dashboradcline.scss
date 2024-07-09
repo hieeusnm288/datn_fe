@@ -16,10 +16,10 @@
             justify-content: space-between;
 
             img {
-                width      : 200px;
-                float      : left;
-                margin-left: 20px;
-                margin-top : 25px;
+                width         : 250px;
+                float         : left;
+                margin-left   : 40px;
+                // margin-top : 25px;
             }
 
             .icons {
@@ -29,6 +29,21 @@
                 .anticon-user {
                     margin-right: 20px;
                     margin-left : 20px;
+                }
+            }
+
+            .menu-header {
+                display   : flex;
+                margin-top: 25px;
+
+                p {
+                    font-size   : 20px;
+                    margin-right: 25px;
+
+                    &:hover {
+                        cursor         : pointer;
+                        text-decoration: underline;
+                    }
                 }
             }
 
@@ -42,6 +57,7 @@
             height             : 600px;
             width              : 100%;
             position           : relative;
+            margin-top         : 80px;
         }
 
         .bannershop-content {
