@@ -28,17 +28,20 @@ function DashbordClient({ children }) {
   // useEffect(() => {
   //   setListCart(JSON.parse(localStorage.getItem("cartItems")));
   // }, [listCart]);
-
+  const [tenKhachHang, setTenKhachHang] = useState();
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const userData = jwtDecode(token);
       if (userData) {
+        console.log(userData);
         setUsername(userData.sub + "");
+        setTenKhachHang(userData.tenKhachHang);
+        localStorage.setItem("username", JSON.stringify(userData.sub + ""));
+        localStorage.setItem("role", JSON.stringify("khachhang"));
       }
     }
   }, []);
-
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -48,7 +51,7 @@ function DashbordClient({ children }) {
     <>
       {username ? (
         <div>
-          {/* <p>{username}</p> */}
+          <p>{tenKhachHang}</p>
           <p
             onClick={() => navigate("/my-order")}
             style={{ cursor: "pointer" }}

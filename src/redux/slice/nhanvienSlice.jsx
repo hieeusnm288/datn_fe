@@ -31,7 +31,15 @@ export const getNhanVien = createAsyncThunk(
     return nhanvien;
   }
 );
-
+export const getNhanVienByUsername = createAsyncThunk(
+  "nhanvien/getNhanVienByUsername",
+  async (username) => {
+    const nhanvien = await nhanvienService.getDetailNhanVienByUsername(
+      username
+    );
+    return nhanvien;
+  }
+);
 export const updateNhanVien = createAsyncThunk(
   "nhanvien/updateNhanVien",
   async (data) => {

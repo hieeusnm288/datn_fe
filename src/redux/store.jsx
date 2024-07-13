@@ -11,6 +11,7 @@ import kichcoService from "../service/kichcoService";
 import kichcoSlice from "./slice/kichcoSlice";
 import mausacSlice from "./slice/mausacSlice";
 import ptttSlice from "./slice/ptttSlice";
+import khachhangSlice from "./slice/khachhangSlice";
 
 const store = configureStore({
   reducer: {
@@ -25,6 +26,7 @@ const store = configureStore({
     kichco: kichcoSlice.reducer,
     mausac: mausacSlice.reducer,
     pttt: ptttSlice.reducer,
+    khachhang: khachhangSlice.reducer,
   },
 });
 export default store;

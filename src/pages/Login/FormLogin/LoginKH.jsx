@@ -3,11 +3,11 @@ import { Button, Form, Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import "./loginstyle.scss";
 import { useDispatch } from "react-redux";
-import { loginNhanVien } from "../../../redux/slice/nhanvienSlice";
-function LoginPage() {
+import { loginKhachHang } from "../../../redux/slice/khachhangSlice";
+function LoginKH() {
   const dispatch = useDispatch();
   const onFinish = (values) => {
-    dispatch(loginNhanVien(values)).then((res) => {
+    dispatch(loginKhachHang(values)).then((res) => {
       if (res.payload) {
         notification.open({
           message: "Đăng nhập thành công!",
@@ -15,7 +15,7 @@ function LoginPage() {
           type: "success",
         });
         localStorage.setItem("token", JSON.stringify(res.payload.jwt));
-        navigate("/admin/dashboard");
+        navigate("/");
       } else {
         notification.open({
           message: "Đăng nhập thất bại!",
@@ -80,4 +80,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default LoginKH;

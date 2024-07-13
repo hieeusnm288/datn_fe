@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BellOutlined, UserOutlined } from "@ant-design/icons";
-import { TbBrandShopee } from "react-icons/tb";
 import { AiOutlineHome } from "react-icons/ai";
 import { Menu, Avatar, Popover } from "antd";
 import { BiLogoShopify, BiCategoryAlt } from "react-icons/bi";
@@ -9,14 +8,17 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaRegListAlt } from "react-icons/fa";
 import "./Dashboard.scss";
 import { useNavigate } from "react-router-dom";
+import { getNhanVienByUsername } from "../../redux/slice/nhanvienSlice";
 import logo from "../../image/logo.png";
-
+import { jwtDecode } from "jwt-decode";
+import { useDispatch } from "react-redux";
 // const { Header, Sider, Content } = Layout;
 function Dashboard({ children }) {
   // const [collapsed, setCollapsed] = useState(false);
-
+  const [username, setUsername] = useState();
+  const [role, setRole] = useState();
+  const [tenNhanVien, setTenNhanVien] = useState();
   const navigate = useNavigate();
-
   const content = (
     <div>
       <p>Đây là Thông báo 1</p>
@@ -26,10 +28,11 @@ function Dashboard({ children }) {
   );
   const logout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/admin/login");
   };
   const contentAccount = (
     <div>
+      <p>{tenNhanVien}</p>
       <p>My Profile</p>
       <p>Đổi mật khẩu</p>
       <p onClick={logout} style={{ cursor: "pointer" }}>
@@ -37,6 +40,20 @@ function Dashboard({ children }) {
       </p>
     </div>
   );
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const userData = jwtDecode(token);
+      if (userData) {
+        setUsername(userData.sub + "");
+        setRole(userData.role);
+        setTenNhanVien(userData.tennhanvien);
+        localStorage.setItem("username", JSON.stringify(userData.sub + ""));
+        localStorage.setItem("role", JSON.stringify(userData.role + ""));
+      }
+    }
+  }, []);
 
   return (
     <div className="dasboard">
@@ -62,6 +79,7 @@ function Dashboard({ children }) {
                   key: "2",
                   icon: <BiCategoryAlt />,
                   label: "Quản Lý Nhân Viên",
+                  disabled: role === 2 ? false : true,
                   children: [
                     {
                       key: "3",
@@ -208,6 +226,25 @@ function Dashboard({ children }) {
                       icon: <FaRegListAlt />,
                       label: "Danh Sách Phương Thức",
                       onClick: () => navigate("/admin/list-pttt"),
+                    },
+                  ],
+                },
+                {
+                  key: "26",
+                  icon: <BiCategoryAlt />,
+                  label: "Quản Lý Khách Hàng",
+                  children: [
+                    {
+                      key: "27",
+                      icon: <IoMdAddCircleOutline />,
+                      label: "Thêm Khách Hàng",
+                      onClick: () => navigate("/admin/khachhang/add"),
+                    },
+                    {
+                      key: "28",
+                      icon: <FaRegListAlt />,
+                      label: "Danh Sách Khách Hàng",
+                      onClick: () => navigate("/admin/list-khachhang"),
                     },
                   ],
                 },

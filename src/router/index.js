@@ -2,6 +2,7 @@ import DashbordClient from "../components/dasbordclient/DashbordClient";
 import Dashboard from "../components/dashboard/Dashboard";
 import CartPage from "../pages/CartPage/CartPage";
 import DetailProduct from "../pages/DetailProduct/DetailProduct";
+import LoginKH from "../pages/Login/FormLogin/LoginKH";
 import LoginPage from "../pages/Login/FormLogin/LoginPage";
 import Register from "../pages/Login/RegisterForm/Register";
 import AddPTTT from "../pages/PhuongThucTT/AddPTTT";
@@ -11,6 +12,8 @@ import ListBrand from "../pages/brand/ListBrand";
 import AddDeGiay from "../pages/degiay/AddDeGiay";
 import ListDeGiay from "../pages/degiay/ListDeGiay";
 import DashboardPage from "../pages/home/DashboardPage";
+import AddKhachHang from "../pages/khachhang/AddKhachHang";
+import ListKhachHang from "../pages/khachhang/ListKhachHang";
 import AddKM from "../pages/khuyenmai/AddKM";
 import ListKM from "../pages/khuyenmai/ListKM";
 import AddKichCo from "../pages/kichco/AddKichCo";
@@ -154,6 +157,21 @@ const adminRouter = [
     component: ListPTTT,
     layout: Dashboard,
   },
+  {
+    path: "/admin/khachhang/add",
+    component: AddKhachHang,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/khachhang/add/:id",
+    component: AddKhachHang,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/list-khachhang",
+    component: ListKhachHang,
+    layout: Dashboard,
+  },
   //Tài Khoản
   // {
   //   path: "/user-account-management",
@@ -164,6 +182,7 @@ const adminRouter = [
 
 const publicRouter = [
   { path: "/admin/login", component: LoginPage, layout: null },
+  { path: "/login", component: LoginKH, layout: null },
   { path: "/register", component: Register, layout: null },
   {
     path: "/",

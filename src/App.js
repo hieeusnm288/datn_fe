@@ -10,9 +10,24 @@ import store from "./redux/store";
 // import AddOrEditBrand from "./pages/brand/AddOrEditBrand";
 import { adminRouter, publicRouter } from "./router";
 import Dashboard from "./components/dashboard/Dashboard";
-import { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import DashbordClient from "./components/dasbordclient/DashbordClient";
+import { jwtDecode } from "jwt-decode";
 function App() {
+  const [role, setRole] = useState();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const userData = jwtDecode(token);
+      if (userData) {
+        if (userData?.role) {
+          setRole(userData?.role);
+        } else {
+          setRole("khachhang");
+        }
+      }
+    }
+  }, []);
   return (
     <Provider store={store}>
       <Router>

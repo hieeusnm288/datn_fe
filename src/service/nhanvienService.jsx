@@ -2,7 +2,7 @@ import axios from "./customaxios";
 // import orderAxios from "./orderAxiois";
 import axiosLogin from "./loginaxios";
 const nhanvienService = {
-  getListNhanVien(key) {
+  getListNhanVien() {
     return axios.get("/nhanvien/all");
   },
   addNhanVien(data) {
@@ -10,6 +10,9 @@ const nhanvienService = {
   },
   getDetailNhanVien(id) {
     return axios.get(`nhanvien/${id}`);
+  },
+  getDetailNhanVienByUsername(usernmae) {
+    return axiosLogin.get(`nhanvien/detail/${usernmae}`);
   },
   updateNhanVIen(id, data) {
     return axios.put(`nhanvien/${id}`, data);
