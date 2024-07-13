@@ -44,6 +44,8 @@ function DashbordClient({ children }) {
   }, []);
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
     navigate("/login");
   };
 
@@ -63,7 +65,7 @@ function DashbordClient({ children }) {
           </p>
         </div>
       ) : (
-        <>Đăng nhập</>
+        <p onClick={() => navigate("/login")}>Đăng nhập</p>
       )}
     </>
   );
@@ -87,7 +89,7 @@ function DashbordClient({ children }) {
             </Badge>
             <Popover
               content={contentAccount}
-              title="My Account"
+              // title=""
               trigger="click"
               placement="bottomLeft"
             >

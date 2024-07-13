@@ -28,6 +28,8 @@ function Dashboard({ children }) {
   );
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
     navigate("/admin/login");
   };
   const contentAccount = (
