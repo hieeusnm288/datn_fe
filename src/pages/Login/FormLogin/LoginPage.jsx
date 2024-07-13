@@ -11,11 +11,12 @@ function LoginPage() {
       if (res.payload) {
         notification.open({
           message: "Đăng nhập thành công!",
-          description: "Bạn đã đăng nhập thành khoản thành công!",
+          description: "Bạn đã đăng nhập thành công!",
           type: "success",
         });
         localStorage.setItem("token", JSON.stringify(res.payload.jwt));
         navigate("/admin/dashboard");
+        window.location.reload();
       } else {
         notification.open({
           message: "Đăng nhập thất bại!",

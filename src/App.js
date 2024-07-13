@@ -12,22 +12,10 @@ import { adminRouter, publicRouter } from "./router";
 import Dashboard from "./components/dashboard/Dashboard";
 import React, { Fragment, useEffect, useState } from "react";
 import DashbordClient from "./components/dasbordclient/DashbordClient";
-import { jwtDecode } from "jwt-decode";
+import { isLoggedIn, isAdmin } from "./auth/auth";
+import ProtectedRoute from "./auth/ProtectedRoute";
+import Page404 from "./pages/404page/Page404";
 function App() {
-  const [role, setRole] = useState();
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const userData = jwtDecode(token);
-      if (userData) {
-        if (userData?.role) {
-          setRole(userData?.role);
-        } else {
-          setRole("khachhang");
-        }
-      }
-    }
-  }, []);
   return (
     <Provider store={store}>
       <Router>
@@ -46,9 +34,11 @@ function App() {
                   key={index}
                   path={route.path}
                   element={
-                    <Layout>
-                      <Page />
-                    </Layout>
+                    <ProtectedRoute
+                      component={Page}
+                      layout={Layout}
+                      isAllowed={isLoggedIn() && isAdmin()}
+                    />
                   }
                 />
               );
