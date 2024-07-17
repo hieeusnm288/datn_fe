@@ -17,7 +17,8 @@
         transition   : .3s ease;
 
         img {
-            width: 100%;
+            width : 100%;
+            height: 250px;
         }
     }
 
@@ -41,10 +42,10 @@
 
     /*Text*/
     .text-title {
-        font-weight: 900;
-        font-size  : 1.2em;
-        line-height: 1.5;
-        height     : 55px;
+        font-weight   : 900;
+        font-size     : 1.2em;
+        line-height   : 1.5;
+        // height     : 55px;
     }
 
     .text-price {

@@ -11,8 +11,10 @@ export const insertKhuyenMai = createAsyncThunk(
 
 export const getlistKhuyenMai = createAsyncThunk(
   "khuyenmai/getlistKhuyenMai",
-  async () => {
-    const listKhuyenMai = await khuyenmaiService.getListKhuyenMai();
+  async (trangthai) => {
+    const listKhuyenMai = await khuyenmaiService.getListKhuyenMaiByTrangThai(
+      trangthai
+    );
     return listKhuyenMai;
   }
 );

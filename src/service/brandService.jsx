@@ -34,6 +34,7 @@ const brandService = {
     }
     return axios.post("/thuonghieu/add", formData);
   },
+
   getImageBrand(url) {
     return axios.get(`/brand/logo/${url}`);
   },

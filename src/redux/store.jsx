@@ -12,6 +12,9 @@ import kichcoSlice from "./slice/kichcoSlice";
 import mausacSlice from "./slice/mausacSlice";
 import ptttSlice from "./slice/ptttSlice";
 import khachhangSlice from "./slice/khachhangSlice";
+import sanphamSlice from "./slice/sanphamSlice";
+import chitietsanphamSlice from "./slice/chitietsanphamSlice";
+import hinhAnhSlice from "./slice/hinhAnhSlice";
 
 const store = configureStore({
   reducer: {
@@ -27,6 +30,9 @@ const store = configureStore({
     mausac: mausacSlice.reducer,
     pttt: ptttSlice.reducer,
     khachhang: khachhangSlice.reducer,
+    sanpham: sanphamSlice.reducer,
+    chitietsanpham: chitietsanphamSlice.reducer,
+    hinhanh: hinhAnhSlice.reducer,
   },
 });
 export default store;

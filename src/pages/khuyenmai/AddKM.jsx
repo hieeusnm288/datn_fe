@@ -32,6 +32,8 @@ function AddKM() {
             phamtramgiam: values.phamtramgiam,
             ngaybatdau: values.ngaybatdau,
             ngayketthuc: values.ngayketthuc,
+            dieukien: values.dieukien,
+            soluong: values.soluong,
             trangthai: values.trangthai,
           })
         ).then((res) => {
@@ -53,6 +55,8 @@ function AddKM() {
             phamtramgiam: values.phamtramgiam,
             ngaybatdau: values.ngaybatdau,
             ngayketthuc: values.ngayketthuc,
+            dieukien: values.dieukien,
+            soluong: values.soluong,
             trangthai: values.trangthai,
           })
         ).then((res) => {
@@ -78,6 +82,8 @@ function AddKM() {
           form.setFieldsValue({
             makhuyenmai: res?.payload?.result.makhuyenmai,
             phamtramgiam: res?.payload?.result.phamtramgiam,
+            dieukien: res?.payload?.result.dieukien,
+            soluong: res?.payload?.result.soluong,
             ngaybatdau: moment(date),
             ngayketthuc: moment(date2),
             gioitinh: res?.payload?.result.gioitinh,
@@ -87,6 +93,8 @@ function AddKM() {
       });
     } else {
       form.setFieldsValue({
+        dieukien: "",
+        soluong: "",
         makhuyenmai: "",
         phamtramgiam: "",
         ngaybatdau: "",
@@ -160,6 +168,34 @@ function AddKM() {
                       ]}
                     >
                       <DatePicker style={{ width: "100%" }} />
+                    </Form.Item>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <div style={{ width: "49%" }}>
+                    <Form.Item
+                      name="dieukien"
+                      label="Hóa đơn tối thiểu"
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </div>
+                  <div style={{ width: "49%" }}>
+                    <Form.Item
+                      name="soluong"
+                      label="Số lượng"
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
+                    >
+                      <Input />
                     </Form.Item>
                   </div>
                 </div>

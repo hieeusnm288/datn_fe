@@ -26,6 +26,7 @@ import AddMauSac from "../pages/mausac/AddMauSac";
 import ListMauSac from "../pages/mausac/ListMauSac";
 import ListNhanVien from "../pages/nhanvien/ListNhanVien";
 import ThemNhanVien from "../pages/nhanvien/ThemNhanVien";
+import AddDetailProduct from "../pages/product/AddDetailProduct";
 import AddProduct from "../pages/product/AddProduct";
 import ListProduct from "../pages/product/ListProduct";
 
@@ -75,6 +76,16 @@ const adminRouter = [
   {
     path: "/admin/product/add/:id",
     component: AddProduct,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/product/add-detail",
+    component: AddDetailProduct,
+    layout: Dashboard,
+  },
+  {
+    path: "/admin/product/add-detail/:id",
+    component: AddDetailProduct,
     layout: Dashboard,
   },
   {

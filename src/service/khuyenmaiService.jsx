@@ -5,6 +5,9 @@ const khuyenmaiService = {
   getListKhuyenMai() {
     return axiosLogin.get("/khuyenmai/all");
   },
+  getListKhuyenMaiByTrangThai(trangthai) {
+    return axiosLogin.get(`/khuyenmai/find?status=${trangthai}`);
+  },
   addKhuyenMai(data) {
     return axios.post("/khuyenmai/add", data);
   },

@@ -11,17 +11,10 @@ function DashbordClient({ children }) {
   const dispatch = useDispatch();
   const [username, setUsername] = useState();
   // const { listCategory } = useSelector((state) => state.category);
-  const { listBrand } = useSelector((state) => state.brand);
-  const [listCart, setListCart] = useState(
-    JSON.parse(localStorage.getItem("cartItems")) || []
-  );
+  const { listBrand, totalElements } = useSelector((state) => state.brand);
+
   useEffect(() => {
-    dispatch(
-      getListBrand({
-        query: "",
-        page: 0,
-      })
-    );
+    dispatch(getListBrand());
   }, [dispatch]);
   const navigate = useNavigate();
 
@@ -81,12 +74,12 @@ function DashbordClient({ children }) {
             <p>Contact Us</p>
           </div>
           <div className="icons">
-            <Badge count={listCart?.length}>
+            {/* <Badge count={listCart?.length}>
               <ShoppingCartOutlined
                 onClick={() => navigate("/shop-product/cart-pge")}
                 style={{ fontSize: "25px" }}
               />
-            </Badge>
+            </Badge> */}
             <Popover
               content={contentAccount}
               // title=""
@@ -103,35 +96,10 @@ function DashbordClient({ children }) {
           <div className="shop-content row container">
             <div className="shop-sidebar col-2">
               <div className="sidebar-content">
-                <h2>Categories</h2>
-                <p
-                  className="category-name"
-                  onClick={() =>
-                    navigate(`/shop-product/name=&categoryId=&brandId=&page=0`)
-                  }
-                >
-                  All
-                </p>
-                {/* {listCategory?.map((i) => (
-                  <p
-                    className="category-name"
-                    onClick={() =>
-                      navigate(
-                        `/shop-product/name=&categoryId=${i.id}&brandId=&page=0`
-                      )
-                    }
-                  >
-                    {i.name}
-                  </p>
-                ))} */}
-              </div>
-              <div className="sidebar-content">
                 <h2>Brand</h2>
                 <p
                   className="category-name"
-                  onClick={() =>
-                    navigate(`/shop-product/name=&categoryId=&brandId=&page=0`)
-                  }
+                  onClick={() => navigate(`/shop-product/name=&brandId=`)}
                 >
                   All
                 </p>
@@ -139,12 +107,10 @@ function DashbordClient({ children }) {
                   <p
                     className="category-name"
                     onClick={() =>
-                      navigate(
-                        `/shop-product/name=&categoryId=&brandId=${i.id}&page=0`
-                      )
+                      navigate(`/shop-product/name=&brandId=${i.idThuongHieu}`)
                     }
                   >
-                    {i.name}
+                    {i.tenthuonghieu}
                   </p>
                 ))}
               </div>

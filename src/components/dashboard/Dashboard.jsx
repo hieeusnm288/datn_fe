@@ -12,6 +12,7 @@ import { getNhanVienByUsername } from "../../redux/slice/nhanvienSlice";
 import logo from "../../image/logo.png";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
+import { TbBrandShopee } from "react-icons/tb";
 // const { Header, Sider, Content } = Layout;
 function Dashboard({ children }) {
   // const [collapsed, setCollapsed] = useState(false);
@@ -98,25 +99,25 @@ function Dashboard({ children }) {
                   ],
                 },
 
-                // {
-                //   key: "5",
-                //   icon: <TbBrandShopee />,
-                //   label: "Products",
-                //   children: [
-                //     {
-                //       key: "6",
-                //       icon: <IoMdAddCircleOutline />,
-                //       label: "Add Product",
-                //       onClick: () => navigate("/admin/product/add"),
-                //     },
-                //     {
-                //       key: "7",
-                //       icon: <FaRegListAlt />,
-                //       label: "List Products",
-                //       onClick: () => navigate("/admin/list-products"),
-                //     },
-                //   ],
-                // },
+                {
+                  key: "5",
+                  icon: <TbBrandShopee />,
+                  label: "Quản Lý Sản Phẩm",
+                  children: [
+                    {
+                      key: "6",
+                      icon: <IoMdAddCircleOutline />,
+                      label: "Thêm Sản Phẩm",
+                      onClick: () => navigate("/admin/product/add"),
+                    },
+                    {
+                      key: "7",
+                      icon: <FaRegListAlt />,
+                      label: "Danh Sách Sản Phẩm",
+                      onClick: () => navigate("/admin/list-products"),
+                    },
+                  ],
+                },
                 {
                   key: "8",
                   icon: <BiLogoShopify />,

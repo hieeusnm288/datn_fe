@@ -1,137 +1,60 @@
 import React, { useEffect, useState } from "react";
-import withRouter from "../../helpers/withRouter";
-import {
-  Button,
-  Space,
-  Table,
-  Select,
-  Modal,
-  Pagination,
-  notification,
-  Image,
-  Input,
-  Tag,
-} from "antd";
-import { MdDelete, MdModeEditOutline } from "react-icons/md";
+import { getListSanPham } from "../../redux/slice/sanphamSlice";
+import { Button, Space, Table, Modal, Tag, notification, Image } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct, getListProduct } from "../../redux/slice/productSlice";
-import { useNavigate } from "react-router-dom";
-import { getListBrand } from "../../redux/slice/brandSlice";
+import { MdModeEditOutline } from "react-icons/md";
+// import { useNavigate } from "react-router-dom";
+import ModalEditSanPham from "./ModalEditSanPham";
 
 function ListProduct() {
-  const { Option } = Select;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [productDetail, setProductDetail] = useState();
-  const dispatch = useDispatch();
-  const [nameSreach, setNameSearch] = useState("");
-  const { ListProduct, totalElements } = useSelector((state) => state.product);
-  const { listBrand } = useSelector((state) => state.brand);
+  const { listSanPham, totalElements } = useSelector((state) => state.sanpham);
+  const [sanPhamDeatil, setSanPhamDetail] = useState();
+  const [showModalUpdate, setShowModalUpdate] = useState(false);
   const [search, setSearch] = useState({
     name: "",
-    categoryId: "",
-    brandId: "",
-    page: 0,
+    status: 2,
+    thuongHieu: "",
   });
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getListProduct(search));
+    dispatch(getListSanPham(search));
   }, [dispatch, search]);
 
-  const navigate = useNavigate();
-  const showModal = (product) => {
-    setIsModalOpen(true);
-    setProductDetail(product);
+  const openModalUpdate = (record) => {
+    setSanPhamDetail(record);
+    setShowModalUpdate(true);
   };
-  const handleOk = () => {
-    setIsModalOpen(false);
-    dispatch(deleteProduct(productDetail?.id)).then((res) => {
-      if (res.payload) {
-        notification.open({
-          message: "Thành công!",
-          description: "Dữ liệu đã được cập nhật",
-          type: "success",
-        });
-        dispatch(
-          getListProduct({
-            name: "",
-            categoryId: "",
-            brandId: "",
-            page: 0,
-          })
-        );
-      }
-    });
+  const cancelModalUpdate = () => {
+    setSanPhamDetail(null);
+    setShowModalUpdate(false);
   };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleEdit = (product) => {
-    navigate(`/admin/product/add/${product.id}`);
-  };
-
-  const conChangePage = (page) => {
-    dispatch(
-      getListProduct({
-        name: search.name,
-        categoryId: search.categoryId,
-        brandId: search.brandId,
-        page: page - 1,
-      })
-    );
-  };
-
-  const handleRowClick = (record) => {};
-
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
+      title: "STT",
+      dataIndex: "idSanPham",
       key: "id",
       width: 100,
       render: (val, record, index) => <>{index + 1}</>,
     },
     {
-      title: "Name",
-      dataIndex: "name",
+      title: "Tên Sản Phẩm",
+      dataIndex: "tensanpham",
       key: "name",
       width: 500,
     },
     {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-      width: 300,
-      render: (val, record, index) => (
-        <>{record.price.toLocaleString("vi-VN")}</>
-      ),
+      title: "Mô tả",
+      dataIndex: "mota",
+      key: "mota",
+      width: 500,
     },
     {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
-      width: 100,
-    },
-    {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      width: 300,
-      render: (val, record, index) => <>{record.category.name}</>,
-    },
-    {
-      title: "Brand",
-      dataIndex: "brand",
-      key: "brand",
-      width: 300,
-      render: (val, record, index) => <>{record.brand.name}</>,
-    },
-    {
-      title: "Image",
-      dataIndex: "image",
-      key: "image",
+      title: "Hình ảnh",
+      dataIndex: "logo",
+      key: "logo",
       render: (_, record) => (
         <Image
-          src={`https://springbe-production.up.railway.app/api/v1/product/image/${record.image}`}
+          src={`http://localhost:8080/api/v1/thuonghieu/logo/${record.tenhinhanh}`}
           width={50}
         />
       ),
@@ -142,126 +65,42 @@ function ListProduct() {
       key: "status",
       width: 300,
       render: (_, record) => (
-        <Tag color={record.status === 1 ? "green" : "red"} key={record.status}>
-          {record.status === 1 ? "Visible" : "Invisible"}
+        <Tag
+          color={record.trangthai == 1 ? "green" : "red"}
+          key={record.status}
+        >
+          {record.trangthai == 1 ? "Visible" : "Invisible"}
         </Tag>
       ),
     },
+
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
           <Button
-            onClick={() => handleEdit(record)}
+            onClick={() => openModalUpdate(record)}
             type="primary"
             icon={<MdModeEditOutline />}
           >
             Edit
           </Button>
-          <Button
-            onClick={() => showModal(record)}
-            type="primary"
-            danger="true"
-            icon={<MdDelete />}
-          >
-            Delete
-          </Button>
         </Space>
       ),
     },
   ];
-  const onSearch = () => {
-    setSearch({
-      name: nameSreach,
-      categoryId: search.categoryId,
-      brandId: search.brandId,
-      page: 0,
-    });
-    dispatch(
-      getListProduct({
-        name: nameSreach,
-        categoryId: search.categoryId,
-        brandId: search.brandId,
-        page: 0,
-      })
-    );
-  };
-  const onChangName = (e) => {
-    setNameSearch(e.target.value);
-  };
-
-  const onChangBrand = (value) => {
-    setSearch({
-      name: search.name,
-      categoryId: search.categoryId === 0 ? "" : search.categoryId,
-      brandId: value === 0 ? "" : value,
-      page: 0,
-    });
-  };
-
   return (
-    <div>
-      <div className="row mb-3">
-        <div className="col-6">
-          <div className="row">
-            <label className="form-label">Srearch Product By Nam</label>
-            <div className="col-8">
-              <Input onChange={onChangName} />
-            </div>
-            <div className="col-4">
-              <Button onClick={onSearch}>Search</Button>
-            </div>
-          </div>
-        </div>
-        <div className="col-6">
-          <div className="row">
-            <div className="col-6">
-              <label className="form-label">Filter by Brand</label>
-              <br />
-              <Select
-                placeholder="Select a Brand"
-                onChange={onChangBrand}
-                // className="form-select"
-                style={{ width: "100%" }}
-                allowClear
-              >
-                <Option value={0}>All</Option>
-                {listBrand?.map((i) => (
-                  <Option value={i.idThuongHieu}>{i.tenthuonghieu}</Option>
-                ))}
-              </Select>
-            </div>
-          </div>
-        </div>
-      </div>
+    <>
       <p>List Product</p>
-      <Table
-        columns={columns}
-        dataSource={ListProduct}
-        pagination={false}
-        onRow={(record) => ({
-          onClick: () => handleRowClick(record),
-        })}
-        style={{ cursor: "pointer" }}
+      <Table columns={columns} dataSource={listSanPham} pagination={false} />
+      <ModalEditSanPham
+        visible={showModalUpdate}
+        onCancel={cancelModalUpdate}
+        data={sanPhamDeatil}
       />
-      <Pagination
-        total={totalElements}
-        onChange={conChangePage}
-        style={{ float: "right", marginTop: "20px" }}
-      />
-      <Modal
-        title="Delete Category"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <p>
-          Bạn có muốn xóa Sản phẩm: {productDetail ? productDetail.name : ""}
-        </p>
-      </Modal>
-    </div>
+    </>
   );
 }
 
-export default withRouter(ListProduct);
+export default ListProduct;

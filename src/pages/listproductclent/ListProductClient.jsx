@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import "./ListShop.scss";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getListProduct } from "../../redux/slice/productSlice";
+import { getListSanPham } from "../../redux/slice/sanphamSlice";
 import CradProduct from "../../components/crads/CradProduct";
 
 function ListProductClient() {
   const { slug } = useParams();
 
-  const { ListProduct } = useSelector((state) => state.product);
+  const { listSanPham } = useSelector((state) => state.sanpham);
   const dispatch = useDispatch();
   const params = new URLSearchParams(slug);
   const obj = Object.fromEntries(params);
@@ -37,30 +37,28 @@ function ListProductClient() {
   }, [cartItems]);
 
   useEffect(() => {
-    if (!slug) {
+    if (!slug || !obj?.brandId) {
       dispatch(
-        getListProduct({
+        getListSanPham({
           name: "",
-          categoryId: "",
-          brandId: "",
-          page: 0,
+          status: 2,
+          thuongHieu: "",
         })
       );
     } else {
       dispatch(
-        getListProduct({
+        getListSanPham({
           name: "",
-          categoryId: obj?.categoryId,
-          brandId: obj?.brandId,
-          page: 0,
+          thuongHieu: obj?.brandId,
+          status: 2,
         })
       );
     }
-  }, [dispatch, slug, obj?.categoryId, obj?.brandId]);
-
+  }, [dispatch, slug, obj?.brandId]);
+  console.log(obj?.brandId);
   return (
     <div className="row">
-      {ListProduct?.map((i) => (
+      {listSanPham?.map((i) => (
         <div className="col-4 mb-3">
           <CradProduct product={i} onClick={() => addToCart(i)} />
         </div>

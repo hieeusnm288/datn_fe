@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Space, Table, Modal, Tag, notification } from "antd";
+import { Button, Space, Table, Modal, Tag, notification, Select } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -14,10 +14,11 @@ function ListKM() {
   );
   const [khuyenmaiDetail, setKhuyenMaiDetail] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [trangThai, setTrangThai] = useState(2);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getlistKhuyenMai());
-  }, [dispatch]);
+    dispatch(getlistKhuyenMai(trangThai));
+  }, [dispatch, trangThai]);
   const navigate = useNavigate();
   const handleEdit = (data) => {
     navigate(`/admin/khuyenmai/add/${data?.idKhuyenMai}`);
@@ -59,10 +60,30 @@ function ListKM() {
     },
     {
       title: "Phần trăn giảm",
-      dataIndex: "record",
+      dataIndex: "phamtramgiam",
       key: "phamtramgiam",
       width: 300,
       render: (_, record) => <>{record.phamtramgiam}%</>,
+    },
+    {
+      title: "Hóa đơn thối thiểu",
+      dataIndex: "dieukien",
+      key: "dieukien",
+      width: 300,
+      render: (_, record) => (
+        <>
+          {record.dieukien.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          })}
+        </>
+      ),
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "soluong",
+      key: "soluong",
+      width: 300,
     },
     {
       title: "Ngày Bắt Đầu",
@@ -121,10 +142,30 @@ function ListKM() {
       ),
     },
   ];
+  const { Option } = Select;
 
+  const handleChange = (value) => {
+    dispatch(getlistKhuyenMai(value));
+  };
   return (
     <>
-      <p>Danh Sách KHuyến Mại</p>
+      <div className="d-flex justify-content-between mb-3">
+        <div style={{ width: "49%" }}>
+          <h2>Danh Sách Khuyễn Mại</h2>
+        </div>
+        <div style={{ width: "49%" }}>
+          <p>Lọc Theo Trạng Thái</p>
+          <Select
+            placeholder="Chọn Trạng Thái"
+            style={{ width: "100%" }}
+            onChange={handleChange}
+          >
+            <Option value={2}>Tất cả</Option>
+            <Option value={1}>Visible</Option>
+            <Option value={0}>Invisible</Option>
+          </Select>
+        </div>
+      </div>
       <Table
         columns={columns}
         dataSource={listKhuyenMai}
