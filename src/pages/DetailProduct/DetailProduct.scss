@@ -21,18 +21,18 @@
 
         .km {
             .card {
-                margin-left        : -1rem;
-                margin-right       : -1rem;
-                display            : flex;
-                flex-wrap          : wrap;
-                align-items        : stretch;
-                margin-bottom      : 2rem;
+                margin-left           : -1rem;
+                margin-right          : -1rem;
+                display               : flex;
+                flex-wrap             : wrap;
+                align-items           : stretch;
+                margin-bottom         : 2rem;
                 // width           : 320px;
-                display            : flex;
-                flex-direction     : column;
-                border-radius      : 0.25rem;
-                background-color   : rgba(17, 24, 39, 1);
-                padding            : 1.5rem;
+                display               : flex;
+                flex-direction        : column;
+                border-radius         : 0.25rem;
+                // background-color   : rgba(17, 24, 39, 1);
+                padding               : 1.5rem;
             }
 
             .header-card {
@@ -44,7 +44,7 @@
                 margin-top   : 0.75rem;
                 margin-bottom: 0.75rem;
                 line-height  : 1.625;
-                color        : #fff;
+                color        : #000;
                 font-weight  : 700;
                 font-size    : 20px;
             }
@@ -52,7 +52,7 @@
             .lists {
                 margin-bottom: 1.5rem;
                 flex         : 1 1 0%;
-                color        : #fff;
+                color        : #000;
             }
 
             .lists .list {

@@ -1,35 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Input, Space, notification, Select, Modal } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-// import { updateSanPham } from "../../redux/slice/sanphamSlice";
+import { updateSanPham } from "../../redux/slice/sanphamSlice";
 import { getListBrand } from "../../redux/slice/brandSlice";
+import ModalEditCTSP from "./ModalEditCTSP";
 
 function ModalEditSanPham({ visible, onCancel, data }) {
   const { listBrand, totalElements } = useSelector((state) => state.brand);
+  const [sanPhamDeatil, setSanPhamDetail] = useState();
+  const [showModalUpdateDetail, setShowModalUpdateDetail] = useState(false);
   const [form] = Form.useForm();
   const { Option } = Select;
   const dispatch = useDispatch();
+  const openModalUpdate = (record) => {
+    setSanPhamDetail(data);
+    setShowModalUpdateDetail(true);
+  };
+  const cancelModalUpdate = () => {
+    setSanPhamDetail(null);
+    setShowModalUpdateDetail(false);
+  };
+
   const onFinish = (values) => {
     form.validateFields().then((values) => {
       console.log(values);
-      // dispatch(
-      //   updateSanPham({
-      //     idSanPham: data.idSanPham,
-      //     tensanpham: values.tensanpham,
-      //     idThuongHieu: values.idThuongHieu,
-      //     mota: values.mota,
-      //     trangthai: values.trangthai,
-      //   })
-      // ).then((res) => {
-      //   if (res.payload) {
-      //     notification.open({
-      //       message: "Thành công!",
-      //       description: "Dữ liệu đã được cập nhật",
-      //       type: "success",
-      //     });
-      //     onCancel();
-      //   }
-      // });
+      dispatch(
+        updateSanPham({
+          idSanPham: data.idSanPham,
+          tensanpham: values.tensanpham,
+          idThuongHieu: values.idThuongHieu,
+          mota: values.mota,
+          trangthai: values.trangthai,
+        })
+      ).then((res) => {
+        if (res.payload) {
+          notification.open({
+            message: "Thành công!",
+            description: "Dữ liệu đã được cập nhật",
+            type: "success",
+          });
+          onCancel();
+        }
+      });
     });
   };
   useEffect(() => {
@@ -54,6 +66,7 @@ function ModalEditSanPham({ visible, onCancel, data }) {
         onCancel={onCancel}
         id="tableProduct"
         footer={null}
+        width={980}
       >
         <Form
           form={form}
@@ -130,7 +143,19 @@ function ModalEditSanPham({ visible, onCancel, data }) {
             </Space>
           </Form.Item>
         </Form>
+        <Button
+          style={{ float: "right", marginTop: "-30px", cursor: "pointer" }}
+          onClick={openModalUpdate}
+        >
+          Update Chi Tiết Sản Phẩm
+        </Button>
       </Modal>
+
+      <ModalEditCTSP
+        visible={showModalUpdateDetail}
+        onCancel={cancelModalUpdate}
+        data={sanPhamDeatil}
+      />
     </>
   );
 }

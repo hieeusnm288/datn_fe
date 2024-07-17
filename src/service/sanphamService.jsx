@@ -13,9 +13,9 @@ const sanphamService = {
   getSanPham(id) {
     return axiosLogin.get(`sanpham/${id}`);
   },
-  //   updateKhuyenMai(id, data) {
-  //     return axios.put(`khuyenmai/${id}`, data);
-  //   },
+  updateSanPham(id, data) {
+    return axios.put(`sanpham/${id}`, data);
+  },
   //   deleteKhuyenMai(id) {
   //     return axios.delete(`khuyenmai/${id}`);
   //   },

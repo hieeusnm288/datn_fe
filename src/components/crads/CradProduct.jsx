@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 function CradProduct({ product, onClick }) {
   const navigate = useNavigate();
-  console.log(product);
   return (
     <div className="card-product">
       <div className="card">

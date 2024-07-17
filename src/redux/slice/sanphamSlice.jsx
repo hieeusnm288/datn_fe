@@ -25,16 +25,16 @@ export const getListSanPham = createAsyncThunk(
 //   }
 // );
 
-// export const updateKhuyenMai = createAsyncThunk(
-//   "khuyenmai/updateKhuyenMai",
-//   async (data) => {
-//     const updateKhuyenMai = await khuyenmaiService.updateKhuyenMai(
-//       data?.id,
-//       data
-//     );
-//     return updateKhuyenMai;
-//   }
-// );
+export const updateSanPham = createAsyncThunk(
+  "sanpham/updateSanPham",
+  async (data) => {
+    const updateSanPham = await sanphamService.updateSanPham(
+      data?.idSanPham,
+      data
+    );
+    return updateSanPham;
+  }
+);
 
 export const getSanPham = createAsyncThunk("sanpham/getSanPham", async (id) => {
   const sanpham = await sanphamService.getSanPham(id);

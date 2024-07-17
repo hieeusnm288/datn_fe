@@ -11,6 +11,9 @@ const kichcoService = {
   getDetailKichCo(id) {
     return axios.get(`kichco/${id}`);
   },
+  getDetailKichCoByName(name) {
+    return axios.get(`/kichco/find?name=${name}`);
+  },
   updateKichCo(id, data) {
     return axios.put(`kichco/${id}`, data);
   },

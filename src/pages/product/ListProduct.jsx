@@ -5,11 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdModeEditOutline } from "react-icons/md";
 // import { useNavigate } from "react-router-dom";
 import ModalEditSanPham from "./ModalEditSanPham";
+import { EyeOutlined } from "@ant-design/icons";
+import ModalChiTietSP from "./ModalChiTietSP";
 
 function ListProduct() {
   const { listSanPham, totalElements } = useSelector((state) => state.sanpham);
   const [sanPhamDeatil, setSanPhamDetail] = useState();
   const [showModalUpdate, setShowModalUpdate] = useState(false);
+  const [showModalDetail, setShowModalDetail] = useState(false);
   const [search, setSearch] = useState({
     name: "",
     status: 2,
@@ -24,9 +27,18 @@ function ListProduct() {
     setSanPhamDetail(record);
     setShowModalUpdate(true);
   };
+  const openModalDetail = (record) => {
+    setSanPhamDetail(record);
+    setShowModalDetail(true);
+  };
+  const cancelModalDetail = () => {
+    setSanPhamDetail(null);
+    setShowModalDetail(false);
+  };
   const cancelModalUpdate = () => {
     setSanPhamDetail(null);
     setShowModalUpdate(false);
+    dispatch(getListSanPham(search));
   };
   const columns = [
     {
@@ -86,6 +98,12 @@ function ListProduct() {
           >
             Edit
           </Button>
+          <Button
+            onClick={() => openModalDetail(record)}
+            icon={<EyeOutlined />}
+          >
+            View
+          </Button>
         </Space>
       ),
     },
@@ -97,6 +115,11 @@ function ListProduct() {
       <ModalEditSanPham
         visible={showModalUpdate}
         onCancel={cancelModalUpdate}
+        data={sanPhamDeatil}
+      />
+      <ModalChiTietSP
+        visible={showModalDetail}
+        onCancel={cancelModalDetail}
         data={sanPhamDeatil}
       />
     </>

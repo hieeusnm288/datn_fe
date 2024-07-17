@@ -27,24 +27,23 @@ export const getListCTSanPham = createAsyncThunk(
 //   }
 // );
 
-// export const updateKhuyenMai = createAsyncThunk(
-//   "khuyenmai/updateKhuyenMai",
-//   async (data) => {
-//     const updateKhuyenMai = await khuyenmaiService.updateKhuyenMai(
-//       data?.id,
-//       data
-//     );
-//     return updateKhuyenMai;
-//   }
-// );
+export const updateChiTietSanPham = createAsyncThunk(
+  "chitietsanpham/updateChiTietSanPham",
+  async (data) => {
+    console.log("slice: ", data);
+    const updateChiTietSanPham =
+      await chitietsanphamService.updateChiTietSanPham(data?.id, data);
+    return updateChiTietSanPham;
+  }
+);
 
-// export const getKhuyenMai = createAsyncThunk(
-//   "khuyenmai/getKhuyenMai",
-//   async (id) => {
-//     const nhanvien = await khuyenmaiService.getDetailKM(id);
-//     return nhanvien;
-//   }
-// );
+export const getCTSP = createAsyncThunk(
+  "chitietsanpham/getCTSP",
+  async (data) => {
+    const ctsp = await chitietsanphamService.getDetailChiTietSP(data);
+    return ctsp;
+  }
+);
 
 const chitietsanphamSlice = createSlice({
   name: "chitietsanpham",

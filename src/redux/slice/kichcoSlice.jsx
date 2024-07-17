@@ -28,7 +28,13 @@ export const getKichCo = createAsyncThunk("kichco/getKichCo", async (id) => {
   const kichco = await kichcoService.getDetailKichCo(id);
   return kichco;
 });
-
+export const getKichCoByName = createAsyncThunk(
+  "kichco/getKichCoByName",
+  async (name) => {
+    const kichco = await kichcoService.getDetailKichCoByName(name);
+    return kichco;
+  }
+);
 export const updateKichCo = createAsyncThunk(
   "kichco/updateKichCo",
   async (data) => {

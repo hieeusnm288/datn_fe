@@ -29,6 +29,14 @@ export const getMauSac = createAsyncThunk("mausac/getMauSac", async (id) => {
   return mausac;
 });
 
+export const getMauSacByName = createAsyncThunk(
+  "mausac/getMauSacByName",
+  async (name) => {
+    const mausac = await mausacService.getDetailMauSacByName(name);
+    return mausac;
+  }
+);
+
 export const updateMauSac = createAsyncThunk(
   "mausac/updateMauSac",
   async (data) => {

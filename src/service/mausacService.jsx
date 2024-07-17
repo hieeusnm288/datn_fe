@@ -11,6 +11,9 @@ const mausacService = {
   getDetailMauSac(id) {
     return axios.get(`mausac/${id}`);
   },
+  getDetailMauSacByName(name) {
+    return axios.get(`/mausac/find?name=${name}`);
+  },
   updateMauSac(id, data) {
     return axios.put(`mausac/${id}`, data);
   },
