@@ -9,7 +9,7 @@ const chitietsanphamService = {
     return axios.post("/chitietsanpham/add", data);
   },
   getDetailChiTietSP(data) {
-    return axios.get(
+    return axiosLogin.get(
       `/chitietsanpham/find?idSanPham=${data.idSanPham}&idKichThuoc=${data.idKichThuoc}&idMauSac=${data.idMauSac}`
     );
   },

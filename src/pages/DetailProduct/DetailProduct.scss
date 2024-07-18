@@ -76,6 +76,16 @@
                 letter-spacing  : 0.05em;
                 color           : rgba(17, 24, 39, 1);
             }
+
+            // button {
+            //     :disabled {
+            //         cursor: not-allowed;
+            //     }
+            // }
+            button:disabled,
+            button[disabled] {
+                cursor: not-allowed;
+            }
         }
 
         .desc {

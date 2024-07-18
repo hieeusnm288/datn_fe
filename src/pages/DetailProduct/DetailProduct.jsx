@@ -18,18 +18,19 @@ function DetailProduct() {
   const [kichCo, setKichCo] = useState();
   const [cstpDetail, setCtspDetail] = useState();
   const [value, setValue] = useState(1);
+  const [count, setCount] = useState();
   const [valueSize, setValueSize] = useState(1);
   const onChange1 = (e) => {
     setValue(e.target.value);
     dispatch(getKichCoByName(e.target.value)).then((res) => {
-      setKichCo(res.payload.result);
+      setKichCo(res.payload?.result);
     });
   };
 
   const onChange2 = (e) => {
     setValueSize(e.target.value);
     dispatch(getMauSacByName(e.target.value)).then((res) => {
-      setMauSac(res.payload.result);
+      setMauSac(res.payload?.result);
     });
   };
 
@@ -40,7 +41,7 @@ function DetailProduct() {
   useEffect(() => {
     if (id) {
       dispatch(getSanPham(id)).then((res) => {
-        setDetail(res.payload.result);
+        setDetail(res.payload?.result);
       });
     }
   }, [id, dispatch]);
@@ -55,6 +56,8 @@ function DetailProduct() {
         })
       ).then((res) => {
         setCtspDetail(res.payload?.result);
+        setPrice(res.payload?.result?.dongia);
+        setCount(res.payload?.result?.soluongton);
       });
     }
   }, [id, dispatch, mauSac, kichCo]);
@@ -62,8 +65,8 @@ function DetailProduct() {
   useEffect(() => {
     if (detail) {
       dispatch(getListCTSanPham(detail.idSanPham)).then((res) => {
-        setListCTSanPham(res.payload.result);
-        setPrice(res.payload.result[0].dongia);
+        setListCTSanPham(res.payload?.result);
+        setPrice(res.payload?.result[0].dongia);
       });
     }
   }, [detail, dispatch]);
@@ -122,6 +125,7 @@ function DetailProduct() {
         <div className="col-5">
           <div className="price-product">
             <p>{price?.toLocaleString("vi-VN")} VND</p>
+            <p>{count == 0 ? "Hết Hàng" : ""}</p>
           </div>
 
           <div className="km">
@@ -145,10 +149,12 @@ function DetailProduct() {
                   </Radio.Group>
                 </li>
               </ul>
+
               <button
                 type="button"
                 className="action"
                 // onClick={() => addToCart(detail)}
+                disabled={count == 0 ? true : false}
               >
                 Add to Cart
               </button>
