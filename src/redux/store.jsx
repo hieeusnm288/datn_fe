@@ -15,6 +15,9 @@ import khachhangSlice from "./slice/khachhangSlice";
 import sanphamSlice from "./slice/sanphamSlice";
 import chitietsanphamSlice from "./slice/chitietsanphamSlice";
 import hinhAnhSlice from "./slice/hinhAnhSlice";
+import giohangSlice from "./slice/giohangSlice";
+import chitietgiohangSlice from "./slice/chitietgiohangSlice";
+import diachiSlice from "./slice/diachiSlice";
 
 const store = configureStore({
   reducer: {
@@ -33,6 +36,9 @@ const store = configureStore({
     sanpham: sanphamSlice.reducer,
     chitietsanpham: chitietsanphamSlice.reducer,
     hinhanh: hinhAnhSlice.reducer,
+    giohang: giohangSlice.reducer,
+    giohangct: chitietgiohangSlice.reducer,
+    diachi: diachiSlice.reducer,
   },
 });
 export default store;

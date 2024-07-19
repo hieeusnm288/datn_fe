@@ -43,7 +43,7 @@ function AddOrEditBrand() {
       dispatch(getDetailBrand(id)).then((res) => {
         if (id) {
           form.setFieldsValue({
-            name: res.payload.name,
+            name: res.payload.name.trimEnd(),
           });
           setBrandDetail({
             logo: res.payload.logo,

@@ -60,7 +60,7 @@ function AddMauSac() {
         console.log(res);
         if (id) {
           form.setFieldsValue({
-            tenmausac: res?.payload?.result.tenmausac,
+            tenmausac: res?.payload?.result.tenmausac.trimEnd(),
             trangthai: res?.payload?.result.trangthai,
           });
         }

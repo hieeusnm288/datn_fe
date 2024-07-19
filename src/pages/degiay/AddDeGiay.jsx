@@ -59,7 +59,7 @@ function AddDeGiay() {
       dispatch(getDeGiay(id)).then((res) => {
         if (id) {
           form.setFieldsValue({
-            tendegiay: res?.payload?.result.tendegiay,
+            tendegiay: res?.payload?.result.tendegiay.trimEnd(),
             trangthai: res?.payload?.result.trangthai,
           });
         }

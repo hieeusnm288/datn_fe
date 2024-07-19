@@ -61,8 +61,8 @@ function AddKichCo() {
       dispatch(getKichCo(id)).then((res) => {
         if (id) {
           form.setFieldsValue({
-            tenkichco: res?.payload?.result.tenkichco,
-            mota: res?.payload?.result.mota,
+            tenkichco: res?.payload?.result.tenkichco.trimEnd(),
+            mota: res?.payload?.result.mota.trimEnd(),
             trangthai: res?.payload?.result.trangthai,
           });
         }

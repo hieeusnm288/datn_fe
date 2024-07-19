@@ -11,8 +11,8 @@ export const inserHinhAnh = createAsyncThunk(
 
 export const getListHinhAnh = createAsyncThunk(
   "hinhanh/getListHinhAnh",
-  async () => {
-    const listHinhAnh = await hinhanhService.getListHinhAnh();
+  async (id) => {
+    const listHinhAnh = await hinhanhService.getListHinhAnh(id);
     return listHinhAnh;
   }
 );

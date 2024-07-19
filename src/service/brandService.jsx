@@ -36,7 +36,7 @@ const brandService = {
   },
 
   getImageBrand(url) {
-    return axios.get(`/brand/logo/${url}`);
+    return axios.get(`/thuonghieu/logo/${url}`);
   },
 };
 

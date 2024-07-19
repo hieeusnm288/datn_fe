@@ -6,21 +6,26 @@ import { getListBrand } from "../../redux/slice/brandSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Badge, Popover } from "antd";
+import { getGioHang, insertGioHang } from "../../redux/slice/giohangSlice";
 import { jwtDecode } from "jwt-decode";
+import { getListGioCT } from "../../redux/slice/chitietgiohangSlice";
 function DashbordClient({ children }) {
   const dispatch = useDispatch();
   const [username, setUsername] = useState();
+  const [count, setCount] = useState(0);
   // const { listCategory } = useSelector((state) => state.category);
   const { listBrand, totalElements } = useSelector((state) => state.brand);
-
+  const { listGioHangCT } = useSelector((state) => state.giohangct);
   useEffect(() => {
     dispatch(getListBrand());
   }, [dispatch]);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   setListCart(JSON.parse(localStorage.getItem("cartItems")));
-  // }, [listCart]);
+  useEffect(() => {
+    if (listGioHangCT) {
+      setCount(listGioHangCT.length);
+    }
+  }, [listGioHangCT]);
   const [tenKhachHang, setTenKhachHang] = useState();
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -32,9 +37,33 @@ function DashbordClient({ children }) {
         setTenKhachHang(userData.tenKhachHang);
         localStorage.setItem("username", JSON.stringify(userData.sub + ""));
         localStorage.setItem("role", JSON.stringify("khachhang"));
+        dispatch(getGioHang(userData?.username)).then((res) => {
+          if (res?.payload?.result) {
+            localStorage.setItem(
+              "idGioHang",
+              JSON.stringify(res?.payload?.result?.idGioHang)
+            );
+            dispatch(getListGioCT(res?.payload?.result?.idGioHang));
+          } else {
+            dispatch(
+              insertGioHang({
+                idKhachHang: userData?.id,
+              })
+            ).then((res) => {
+              if (res?.payload?.result) {
+                localStorage.setItem(
+                  "idGioHang",
+                  JSON.stringify(res?.payload?.reuslt?.idGioHang)
+                );
+                dispatch(getListGioCT(res?.payload?.result?.idGioHang));
+              }
+            });
+          }
+        });
       }
     }
-  }, []);
+  }, [dispatch]);
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
@@ -46,7 +75,12 @@ function DashbordClient({ children }) {
     <>
       {username ? (
         <div>
-          <p>{tenKhachHang}</p>
+          <p
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/my-profile")}
+          >
+            Thông tin cá nhân
+          </p>
           <p
             onClick={() => navigate("/my-order")}
             style={{ cursor: "pointer" }}
@@ -68,18 +102,18 @@ function DashbordClient({ children }) {
         <div className="header">
           <img src={logo} alt="" />
           <div className="menu-header">
-            <p>Home</p>
-            <p>Shop</p>
-            <p>About Us</p>
-            <p>Contact Us</p>
+            <p onClick={() => navigate("/")}>Home</p>
+            <p onClick={() => navigate("/")}>Shop</p>
+            <p onClick={() => navigate("/")}>About Us</p>
+            <p onClick={() => navigate("/")}>Contact Us</p>
           </div>
           <div className="icons">
-            {/* <Badge count={listCart?.length}>
+            <Badge count={count}>
               <ShoppingCartOutlined
                 onClick={() => navigate("/shop-product/cart-pge")}
                 style={{ fontSize: "25px" }}
               />
-            </Badge> */}
+            </Badge>
             <Popover
               content={contentAccount}
               // title=""
@@ -96,7 +130,7 @@ function DashbordClient({ children }) {
           <div className="shop-content row container">
             <div className="shop-sidebar col-2">
               <div className="sidebar-content">
-                <h2>Brand</h2>
+                <h2>Thương Hiệu</h2>
                 <p
                   className="category-name"
                   onClick={() => navigate(`/shop-product/name=&brandId=`)}

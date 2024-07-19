@@ -4,19 +4,31 @@ import CartProduct from "../../components/cartproduct/CartProduct";
 import { Button, Form, Input, notification } from "antd";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { insertOrder } from "../../redux/slice/orderSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getListGioCT,
+  deleteGioHangCT,
+} from "../../redux/slice/chitietgiohangSlice";
 
 function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [payment, setPayment] = useState(false);
   const [username, setUsername] = useState();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   setCartItems(JSON.parse(localStorage.getItem("cartItems")));
-  // }, [cartItems]);
+  const { listGioHangCT } = useSelector((state) => state.giohangct);
+  useEffect(() => {
+    dispatch(getListGioCT(localStorage.getItem("idGioHang").slice(1, -1))).then(
+      (res) => {
+        if (res?.payload.result) {
+          setCartItems(res?.payload.result);
+        }
+      }
+    );
+  }, [dispatch]);
   const [form] = Form.useForm();
+  // console.log(listGioHangCT);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -26,8 +38,6 @@ function CartPage() {
       }
     }
   }, []);
-
-  const dispatch = useDispatch();
 
   const Onpayment = () => {
     if (!username) {
@@ -44,33 +54,34 @@ function CartPage() {
 
   useEffect(() => {
     let total = 0;
-    cartItems.forEach((item) => {
-      total += item.price * item.quantity;
+    listGioHangCT.forEach((item) => {
+      total += item.tongtien * item.soluong;
     });
     setTotalPrice(total);
-  }, [cartItems]);
-  const onFinish = (values) => {
-    form.validateFields().then((values) => {
-      dispatch(
-        insertOrder({
-          username: username,
-          address: values.address,
-          list: cartItems,
-        })
-      ).then((res) => {
-        if (res.payload) {
-          notification.open({
-            message: "Thành công!",
-            description: "Đơn hàng đã được đặt",
-            type: "success",
-          });
-          navigate("/my-order");
-          localStorage.removeItem("cartItems");
-        }
-      });
-    });
-  };
-  const onFinishFailed = (errorInfo) => {};
+  }, [listGioHangCT]);
+
+  // const onFinish = (values) => {
+  //   form.validateFields().then((values) => {
+  //     dispatch(
+  //       insertOrder({
+  //         username: username,
+  //         address: values.address,
+  //         list: cartItems,
+  //       })
+  //     ).then((res) => {
+  //       if (res.payload) {
+  //         notification.open({
+  //           message: "Thành công!",
+  //           description: "Đơn hàng đã được đặt",
+  //           type: "success",
+  //         });
+  //         navigate("/my-order");
+  //         localStorage.removeItem("cartItems");
+  //       }
+  //     });
+  //   });
+  // };
+  // const onFinishFailed = (errorInfo) => {};
   return (
     <div className="cart-page container">
       <div className="row">
@@ -86,24 +97,24 @@ function CartPage() {
             <div className="card-body">
               <div className="row justify-content-between">
                 <div className="col-10">
-                  <h5 className="card-title fw-semibold mb-4">Cart</h5>
+                  <h5 className="card-title fw-semibold mb-4">Giỏ Hàng</h5>
                 </div>
-                <div className="col-2">
+                {/* <div className="col-2">
                   <p className="clear">Clear Cart</p>
-                </div>
+                </div> */}
               </div>
               <div>
-                {cartItems?.map((i) => (
+                {listGioHangCT?.map((i) => (
                   <CartProduct product={i} />
                 ))}
               </div>
               <div className="row justify-content-between mt-3">
                 <div className="col-10">
-                  <h5 className="card-title fw-semibold mb-4">Total payment</h5>
+                  <h5 className="card-title fw-semibold mb-4">Tổng Tiền</h5>
                 </div>
                 <div className="col-2">
                   <p className="fw-bold">
-                    {totalPrice.toLocaleString("vi-VN")} VND
+                    {totalPrice?.toLocaleString("vi-VN")} VND
                   </p>
                 </div>
               </div>
@@ -114,14 +125,14 @@ function CartPage() {
                   onClick={Onpayment}
                   disabled={cartItems.length <= 0 ? true : false}
                 >
-                  {!payment ? "Checkout" : "Cancel"}
+                  {!payment ? "Đặt Hàng" : "Cancel"}
                 </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {!payment ? (
+      {/* {!payment ? (
         <></>
       ) : (
         <div className="form-pay mt-3">
@@ -177,7 +188,7 @@ function CartPage() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

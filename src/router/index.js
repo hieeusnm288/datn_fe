@@ -29,6 +29,7 @@ import ThemNhanVien from "../pages/nhanvien/ThemNhanVien";
 import AddDetailProduct from "../pages/product/AddDetailProduct";
 import AddProduct from "../pages/product/AddProduct";
 import ListProduct from "../pages/product/ListProduct";
+import MyProfile from "../pages/profile/MyProfile";
 
 const adminRouter = [
   { path: "/admin/dashboard", component: DashboardPage, layout: Dashboard },
@@ -198,6 +199,11 @@ const publicRouter = [
   {
     path: "/",
     component: ListProductClient,
+    layout: DashbordClient,
+  },
+  {
+    path: "/my-profile",
+    component: MyProfile,
     layout: DashbordClient,
   },
   {

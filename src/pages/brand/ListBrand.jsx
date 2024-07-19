@@ -99,7 +99,7 @@ function ListBrand() {
     setIsModalUpdateOpen(true);
     form.setFieldsValue({
       idThuongHieu: brand.idThuongHieu,
-      tenthuonghieu: brand.tenthuonghieu,
+      tenthuonghieu: brand.tenthuonghieu.trimEnd(),
       mota: brand.mota,
       trangthai: brand.trangthai,
       logoFile: [

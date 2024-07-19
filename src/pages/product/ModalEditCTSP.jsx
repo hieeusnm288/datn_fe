@@ -22,8 +22,8 @@ function ModalEditCTSP({ visible, onCancel, data }) {
     if (listCTSanPham) {
       listCTSanPham?.map((i, index) =>
         form.setFieldsValue({
-          [`soluong-${index}`]: i?.soluongton,
-          [`dongia-${index}`]: i?.dongia,
+          [`soluong-${index}`]: i?.soluongton.trimEnd(),
+          [`dongia-${index}`]: i?.dongia.trimEnd(),
           [`trangthai-${index}`]: Number(i?.trangthai),
         })
       );

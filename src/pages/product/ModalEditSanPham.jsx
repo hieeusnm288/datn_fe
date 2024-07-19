@@ -51,9 +51,9 @@ function ModalEditSanPham({ visible, onCancel, data }) {
   useEffect(() => {
     if (data) {
       form.setFieldsValue({
-        tensanpham: data?.tensanpham,
+        tensanpham: data?.tensanpham.trimEnd(),
         idThuongHieu: data?.thuonghieu.idThuongHieu,
-        mota: data.mota,
+        mota: data.mota.trimEnd(),
         trangthai: Number(data.trangthai),
       });
     }

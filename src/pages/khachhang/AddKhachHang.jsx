@@ -84,11 +84,11 @@ function AddKhachHang() {
           const date = new Date(res?.payload?.result.ngaysinh);
           console.log(res);
           form.setFieldsValue({
-            tenkhachhang: res?.payload?.result.tenkhachhang,
-            username: res?.payload?.result.username,
+            tenkhachhang: res?.payload?.result.tenkhachhang.trimEnd(),
+            username: res?.payload?.result.username.trimEnd(),
             password: res?.payload?.result.password,
             email: res?.payload?.result.email,
-            sodienthoai: res?.payload?.result.sodienthoai,
+            sodienthoai: res?.payload?.result.sodienthoai.trimEnd(),
             ngaysinh: moment(date),
             gioitinh: res?.payload?.result.gioitinh,
             trangthai: res?.payload?.result.trangthai,

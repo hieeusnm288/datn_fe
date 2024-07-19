@@ -88,12 +88,12 @@ function ThemNhanVien() {
           setNhanvienDetail(res?.payload?.result);
           const date = new Date(res?.payload?.result.ngaysinh);
           form.setFieldsValue({
-            tennhanvien: res?.payload?.result.tennhanvien,
+            tennhanvien: res?.payload?.result.tennhanvien.trimEnd(),
             username: res?.payload?.result.username,
             password: res?.payload?.result.password,
-            email: res?.payload?.result.email,
-            sodienthoai: res?.payload?.result.sodienthoai,
-            diachi: res?.payload?.result.diachi,
+            email: res?.payload?.result.email.trimEnd(),
+            sodienthoai: res?.payload?.result.sodienthoai.trimEnd(),
+            diachi: res?.payload?.result.diachi.trimEnd(),
             ngaysinh: moment(date),
             gioitinh: res?.payload?.result.gioitinh,
             trangthai: res?.payload?.result.trangthai,

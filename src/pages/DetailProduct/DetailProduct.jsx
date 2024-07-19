@@ -9,9 +9,15 @@ import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
 import { getKichCoByName } from "../../redux/slice/kichcoSlice";
 import { getMauSacByName } from "../../redux/slice/mausacSlice";
-import { Radio } from "antd";
+import {
+  getListGioCT,
+  insertGioHangCT,
+} from "../../redux/slice/chitietgiohangSlice";
+import { notification, Radio } from "antd";
 import "./DetailProduct.scss";
+import { jwtDecode } from "jwt-decode";
 function DetailProduct() {
+  const navigate = useNavigate();
   const [listCTSanPham, setListCTSanPham] = useState([]);
   const [detail, setDetail] = useState();
   const [mauSac, setMauSac] = useState();
@@ -20,13 +26,22 @@ function DetailProduct() {
   const [value, setValue] = useState(1);
   const [count, setCount] = useState();
   const [valueSize, setValueSize] = useState(1);
+  const [username, setUsername] = useState();
   const onChange1 = (e) => {
     setValue(e.target.value);
     dispatch(getKichCoByName(e.target.value)).then((res) => {
       setKichCo(res.payload?.result);
     });
   };
-
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const userData = jwtDecode(token);
+      if (userData) {
+        setUsername(userData.sub + "");
+      }
+    }
+  }, []);
   const onChange2 = (e) => {
     setValueSize(e.target.value);
     dispatch(getMauSacByName(e.target.value)).then((res) => {
@@ -84,20 +99,34 @@ function DetailProduct() {
   const uniqueSize = [
     ...new Set(listCTSanPham.map((product) => product.kichco.tenkichco)),
   ];
-  // const addToCart = (product) => {
-  //   setCartItems((prevCartItems) => {
-  //     const productExist = prevCartItems.find((item) => item.id === product.id);
-  //     if (productExist) {
-  //       return prevCartItems.map((item) =>
-  //         item.id === product.id
-  //           ? { ...item, quantity: item.quantity + 1 }
-  //           : item
-  //       );
-  //     } else {
-  //       return [...prevCartItems, { ...product, quantity: 1 }];
-  //     }
-  //   });
-  // };
+  const addToCart = (cstp) => {
+    if (!username) {
+      notification.open({
+        message: "Bạn chưa đăng nhập!",
+        description: "Vui lòng đăng nhập để đặt hàng",
+        type: "warning",
+      });
+      navigate("/login");
+    } else {
+      dispatch(
+        insertGioHangCT({
+          idGioHang: localStorage.getItem("idGioHang").slice(1, -1),
+          idChiTietSanPham: cstp.idChiTietSanPham,
+        })
+      ).then((res) => {
+        if (res?.payload?.result) {
+          notification.open({
+            message: "Thành công!",
+            description: "Thêm sản phẩm vào giỏ hàng",
+            type: "success",
+          });
+          dispatch(
+            getListGioCT(localStorage.getItem("idGioHang").slice(1, -1))
+          );
+        }
+      });
+    }
+  };
 
   return (
     <div className="detail-product">
@@ -153,7 +182,7 @@ function DetailProduct() {
               <button
                 type="button"
                 className="action"
-                // onClick={() => addToCart(detail)}
+                onClick={() => addToCart(cstpDetail)}
                 disabled={count == 0 ? true : false}
               >
                 Add to Cart

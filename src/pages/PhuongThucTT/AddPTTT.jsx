@@ -54,7 +54,7 @@ function AddPTTT() {
         console.log(res);
         if (id) {
           form.setFieldsValue({
-            hinhthuc: res?.payload?.result.hinhthuc,
+            hinhthuc: res?.payload?.result.hinhthuc.trimEnd(),
           });
         }
       });
