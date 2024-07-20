@@ -2,61 +2,47 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Pagination, Space, Table, Tag } from "antd";
 import { jwtDecode } from "jwt-decode";
-import { getListOrder } from "../../redux/slice/orderSlice";
+import { getListDonHangById } from "../../redux/slice/donHangSlice";
 import moment from "moment";
 import { EyeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 function ListOrderClient() {
   const dispatch = useDispatch();
-  const { listOrder, totalElements } = useSelector((state) => state.order);
+  // const { listOrder, totalElements } = useSelector((state) => state.order);
+  const [listOrder, setListOrder] = useState();
   const [username, setUsername] = useState("");
-  const [pargam, setPargam] = useState({
-    name: username,
-    page: 0,
-  });
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const userData = jwtDecode(token);
-      if (userData) {
-        setUsername(userData.sub + "");
-      }
+      dispatch(getListDonHangById(userData.id)).then((res) => {
+        if (res?.payload?.result) {
+          setListOrder(res?.payload?.result);
+        }
+      });
     }
-  }, []);
-  useEffect(() => {
-    dispatch(getListOrder(pargam));
-  }, [dispatch, pargam]);
-
-  const conChangePage = (page) => {
-    dispatch(
-      getListOrder({
-        name: username,
-        page: page - 1,
-      })
-    );
-  };
+  }, [dispatch]);
+  // console.log(listOrder);
   const columns = [
     {
       title: "STT",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "idHoaDon",
+      key: "idHoaDon",
       width: 100,
       render: (val, record, index) => <>{index + 1}</>,
     },
     {
       title: "Ngày đặt",
-      dataIndex: "createDate",
-      key: "createDate",
+      dataIndex: "ngaytao",
+      key: "ngaytao",
       width: 600,
-      render: (_, record) => (
-        <>{moment(record.createDate).format("DD/MM/YYYY")}</>
-      ),
+      render: (_, record) => <>{moment(record.ngaytao).format("DD/MM/YYYY")}</>,
     },
     {
       title: "Địa chỉ",
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "diachi",
+      key: "diachi",
       width: 900,
     },
     {
@@ -65,11 +51,7 @@ function ListOrderClient() {
       key: "payment",
       width: 900,
       render: (_, record) => (
-        <>
-          {record.payment === 1
-            ? "Thanh toán khi nhận hàng"
-            : "Thanh toám chuyển khoản"}
-        </>
+        <>{record.phuongThucThanhToan.hinhthuc.trimEnd()}</>
       ),
     },
     {
@@ -79,13 +61,18 @@ function ListOrderClient() {
       width: 900,
       render: (_, record) => (
         <>
-          {record.status === 0 ? (
-            <Tag color="error">Đơn hàng đã hủy</Tag>
-          ) : record.status === 1 ? (
-            <Tag color="processing">Chờ xác nhận</Tag>
-          ) : (
-            <Tag color="success">Đã xác nhận</Tag>
-          )}
+          <>{record.trangThaiHoaDon.tentrangthai.trimEnd()}</>
+        </>
+      ),
+    },
+    {
+      title: "Tổng Tiền",
+      dataIndex: "status",
+      key: "status",
+      width: 900,
+      render: (_, record) => (
+        <>
+          <>{record.tongtien?.toLocaleString("vi-VN")} VND</>
         </>
       ),
     },
@@ -95,7 +82,7 @@ function ListOrderClient() {
       render: (_, record) => (
         <Space size="middle">
           <Button
-            onClick={() => navigate(`/order-detail/${record.id}`)}
+            onClick={() => navigate(`/order-detail/${record.idHoaDon}`)}
             type="primary"
             icon={<EyeOutlined />}
           >
@@ -109,12 +96,12 @@ function ListOrderClient() {
     <div>
       <p>Danh sách đơn hàng của tôi</p>
       <Table columns={columns} dataSource={listOrder} pagination={false} />
-      <Pagination
+      {/* <Pagination
         total={totalElements}
         onChange={conChangePage}
         style={{ float: "right", marginTop: "20px" }}
         pageSize={5}
-      />
+      /> */}
     </div>
   );
 }

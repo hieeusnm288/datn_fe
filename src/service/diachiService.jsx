@@ -14,6 +14,9 @@ const diachiService = {
   deleteDiaChi(id) {
     return axiosLogin.delete(`diachi/${id}`);
   },
+  getDiaChi(id) {
+    return axiosLogin.get(`diachi/${id}`);
+  },
 };
 
 export default diachiService;

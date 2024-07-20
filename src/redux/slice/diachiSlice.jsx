@@ -33,6 +33,10 @@ export const updateDiaChi = createAsyncThunk(
     return updateDiaChi;
   }
 );
+export const getDiaChi = createAsyncThunk("diachi/getDiaChi", async (id) => {
+  const diachi = await diachiService.getDiaChi(id);
+  return diachi;
+});
 
 const diachiSlice = createSlice({
   name: "diachi",

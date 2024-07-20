@@ -14,6 +14,9 @@ const chitietgiohangService = {
   deleteGioHangCT(id) {
     return axiosLogin.delete(`giohangchitiet/${id}`);
   },
+  deleteAllGioHangCT(id) {
+    return axiosLogin.delete(`giohangchitiet/delete-all/${id}`);
+  },
 };
 
 export default chitietgiohangService;

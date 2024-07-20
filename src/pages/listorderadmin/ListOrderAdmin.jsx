@@ -1,85 +1,109 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Pagination, Space, Table, Tag, Modal, Image } from "antd";
-import {
-  cancelOrder,
-  confirmOrder,
-  getDetailOrder,
-  getListOrder,
-} from "../../redux/slice/orderSlice";
+import { Button, Space, Table, Modal, Radio } from "antd";
+import { getListDonHang, updateDonHang } from "../../redux/slice/donHangSlice";
+import { getListDonHangCT } from "../../redux/slice/donhangchitietSlice";
+import { getListTrangThai } from "../../redux/slice/trangthaihoadonSlice";
 import moment from "moment";
 import { EyeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 function ListOrderAdmin() {
   const dispatch = useDispatch();
-  const [detailOrder, setDetailOrder] = useState();
-  const { listOrder, totalElements } = useSelector((state) => state.order);
-  const [username, setUsername] = useState("");
-  const [pargam, setPargam] = useState({
-    name: username,
-    page: 0,
-  });
-  const [idOrder, setIdOrder] = useState(0);
+  const [listOder, setListOrder] = useState();
+  const [donHangCT, setDonHangCT] = useState();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenTT, setIsModalOpenTT] = useState(false);
+  const [detailHoaDon, setDetailHoaDon] = useState();
+  const [listTT, setListTT] = useState();
+  const [value, setValue] = useState(1);
+  const onChange = (e) => {
+    console.log("radio checked", e.target.value);
+    setValue(e.target.value);
+  };
   useEffect(() => {
-    dispatch(getListOrder(pargam));
-  }, [dispatch, pargam]);
+    dispatch(getListDonHang()).then((res) => {
+      if (res?.payload?.result) {
+        setListOrder(res?.payload?.result);
+      }
+    });
+  }, [dispatch]);
+  useEffect(() => {
+    dispatch(getListTrangThai()).then((res) => {
+      if (res?.payload?.result) {
+        setListTT(res?.payload?.result);
+      }
+    });
+  }, [dispatch]);
+  const showModal = (data) => {
+    setDetailHoaDon(data);
+    dispatch(getListDonHangCT(data?.idHoaDon)).then((res) => {
+      if (res?.payload?.result) {
+        setDonHangCT(res?.payload?.result);
+      }
+    });
+    setIsModalOpen(true);
+  };
 
-  const conChangePage = (page) => {
+  const showModalTT = () => {
+    setIsModalOpenTT(true);
+  };
+
+  const handleOk = () => {
+    const date = new Date(detailHoaDon.ngaytao);
     dispatch(
-      getListOrder({
-        name: username,
-        page: page - 1,
+      updateDonHang({
+        id: detailHoaDon.idHoaDon,
+        idKhachHang: detailHoaDon.khachHang.idKhachHang,
+        idKhuyenMai: detailHoaDon.khuyenMai
+          ? detailHoaDon.khuyenMai.idKhuyenMai
+          : null,
+        tongtien: detailHoaDon.tongtien,
+        ngaytao: date,
+        diachi: detailHoaDon.diachi,
+        idPhuongThucThanhToan: detailHoaDon.phuongThucThanhToan.id,
+        idTrangThaiDonHang: value,
       })
-    );
-  };
-
-  const onConfrimOrder = () => {
-    dispatch(confirmOrder(idOrder)).then((res) => {
-      if (res.payload) {
-        dispatch(getListOrder(pargam));
-        setOpen(false);
+    ).then((res) => {
+      if (res?.payload?.result) {
+        setIsModalOpenTT(false);
+        setIsModalOpen(false);
+        dispatch(getListDonHang()).then((res) => {
+          if (res?.payload?.result) {
+            setListOrder(res?.payload?.result);
+          }
+        });
       }
     });
   };
-  const onCancelOrder = () => {
-    dispatch(cancelOrder(idOrder)).then((res) => {
-      if (res.payload) {
-        dispatch(getListOrder(pargam));
-        setOpen(false);
-      }
-    });
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
-
+  console.log(detailHoaDon);
+  const handleCancelTT = () => {
+    setIsModalOpenTT(false);
+  };
   const columns = [
     {
       title: "STT",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "idHoaDon",
+      key: "idHoaDon",
       width: 100,
       render: (val, record, index) => <>{index + 1}</>,
     },
     {
       title: "Ngày đặt",
-      dataIndex: "createDate",
-      key: "createDate",
+      dataIndex: "ngaytao",
+      key: "ngaytao",
       width: 600,
       render: (_, record) => (
-        <>{moment(record.createDate).format("DD/MM/YYYY")}</>
+        <>{moment(record?.ngaytao).format("DD/MM/YYYY")}</>
       ),
     },
     {
-      title: "Username Khách Hàng",
-      dataIndex: "account",
-      key: "account",
-      width: 900,
-      render: (_, record) => <>{record.account.username}</>,
-    },
-    {
       title: "Địa chỉ",
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "diachi",
+      key: "diachi",
       width: 900,
     },
     {
@@ -88,11 +112,7 @@ function ListOrderAdmin() {
       key: "payment",
       width: 900,
       render: (_, record) => (
-        <>
-          {record.payment === 1
-            ? "Thanh toán khi nhận hàng"
-            : "Thanh toám chuyển khoản"}
-        </>
+        <>{record.phuongThucThanhToan.hinhthuc.trimEnd()}</>
       ),
     },
     {
@@ -102,13 +122,18 @@ function ListOrderAdmin() {
       width: 900,
       render: (_, record) => (
         <>
-          {record.status === 0 ? (
-            <Tag color="error">Đơn hàng đã hủy</Tag>
-          ) : record.status === 1 ? (
-            <Tag color="processing">Chờ xác nhận</Tag>
-          ) : (
-            <Tag color="success">Đã xác nhận</Tag>
-          )}
+          <>{record.trangThaiHoaDon.tentrangthai.trimEnd()}</>
+        </>
+      ),
+    },
+    {
+      title: "Tổng Tiền",
+      dataIndex: "status",
+      key: "status",
+      width: 900,
+      render: (_, record) => (
+        <>
+          <>{record.tongtien?.toLocaleString("vi-VN")} VND</>
         </>
       ),
     },
@@ -122,100 +147,143 @@ function ListOrderAdmin() {
             type="primary"
             icon={<EyeOutlined />}
           >
-            Xem
+            Xem chi tiết
           </Button>
         </Space>
       ),
     },
   ];
 
-  const columnsProduct = [
+  const columns2 = [
     {
       title: "STT",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "idChiTietHoaDon",
+      key: "idChiTietHoaDon",
       width: 100,
       render: (val, record, index) => <>{index + 1}</>,
     },
     {
-      title: "Ảnh",
-      dataIndex: "img",
-      key: "id",
-      width: 500,
+      title: "Tên Sản Phẩm",
+      dataIndex: "ngaytao",
+      key: "ngaytao",
+      width: 600,
       render: (_, record) => (
-        <Image
-          src={`https://springbe-production.up.railway.app/api/v1/product/image/${record.product.image}`}
-          width={50}
-        />
+        <>{record?.chiTietSanPham?.sanpham?.tensanpham.trimEnd()}</>
       ),
     },
     {
-      title: "Tên sản phẩm",
-      dataIndex: "name",
-      key: "id",
-      width: 900,
-      render: (_, record) => <>{record.product.name}</>,
-    },
-    {
-      title: "Giá sản phẩm",
-      dataIndex: "price",
-      key: "id",
-      width: 300,
+      title: "Kích Cỡ",
+      dataIndex: "diachi",
+      key: "diachi",
+      width: 200,
       render: (_, record) => (
-        <>{record.product.price.toLocaleString("vi-VN")}</>
+        <>{record?.chiTietSanPham?.kichco?.tenkichco.trimEnd()}</>
       ),
     },
     {
-      title: "Số lượng",
-      dataIndex: "quantity",
-      key: "id",
-      width: 300,
-      render: (_, record) => <>{record.product.quantity}</>,
+      title: "Màu Sắc",
+      dataIndex: "payment",
+      key: "mausac",
+      width: 200,
+      render: (_, record) => (
+        <>{record?.chiTietSanPham?.mausac?.tenmausac.trimEnd()}</>
+      ),
+    },
+    {
+      title: "Đơn Giá",
+      dataIndex: "payment",
+      key: "dongia",
+      width: 400,
+      render: (_, record) => (
+        <>{record?.chiTietSanPham?.dongia?.toLocaleString("vi-VN")} VND</>
+      ),
+    },
+    {
+      title: "Số Lượng",
+      dataIndex: "payment",
+      key: "soluong",
+      width: 200,
+      render: (_, record) => <>{record.soluong}</>,
     },
   ];
-
-  const showModal = (order) => {
-    setIdOrder(order.id);
-    dispatch(getDetailOrder(order.id)).then((res) => {
-      setDetailOrder(res.payload);
-    });
-    setOpen(true);
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-  };
   return (
     <div>
       <p>Danh sách đơn hàng</p>
-      <Table columns={columns} dataSource={listOrder} pagination={false} />
-      <Pagination
-        total={totalElements}
-        onChange={conChangePage}
-        style={{ float: "right", marginTop: "20px" }}
-        pageSize={5}
-      />
+      <Table columns={columns} dataSource={listOder} pagination={false} />
       <Modal
-        open={open}
-        title="Chi tiết đơn hàng"
+        title="Chi Tiết Đơn Hàng"
+        open={isModalOpen}
         onCancel={handleCancel}
-        width="90%"
-        footer={(_, { OkBtn, CancelBtn }) => (
-          <>
-            <Button type="primary" onClick={onConfrimOrder}>
-              Xác nhận đơn hàng
-            </Button>
-            <Button type="primary" danger onClick={onCancelOrder}>
-              Hủy đơn hàng
-            </Button>
-          </>
-        )}
+        width={1200}
+        footer={null}
       >
-        <Table
-          columns={columnsProduct}
-          dataSource={detailOrder}
-          pagination={false}
-        />
+        <div>
+          <div className="d-flex justify-content-between">
+            <b style={{ fontSize: "20px" }}>1. Thông Tin Đơn Hàng</b>
+            <Button onClick={showModalTT}>Cập nhật trạng thái</Button>
+          </div>
+          <div className="d-flex justify-content-between flex-wrap mt-3">
+            <p style={{ fontSize: "18px" }} className="mt-1">
+              <b>Trạng Thái Hóa Đơn: </b>
+              {detailHoaDon?.trangThaiHoaDon?.tentrangthai.trimEnd()}
+            </p>
+            <p style={{ fontSize: "18px" }} className="mt-1">
+              <b>Phương Thức Thanh Toán: </b>
+              {detailHoaDon?.phuongThucThanhToan?.hinhthuc.trimEnd()}
+            </p>
+            <p style={{ fontSize: "18px" }} className="mt-1">
+              <b>Tổng Tiền: </b>
+              {detailHoaDon?.tongtien?.toLocaleString("vi-VN")} VND
+            </p>
+            <p style={{ fontSize: "18px" }} className="mt-1">
+              <b>Địa Chỉ: </b>
+              {detailHoaDon?.diachi.trimEnd()}
+            </p>
+            <p style={{ fontSize: "18px" }} className="mt-1">
+              <b>Ngày Tạo: </b>
+              {moment(detailHoaDon?.ngaytao).format("DD/MM/YYYY")}
+            </p>
+          </div>
+        </div>
+        <hr />
+        <div>
+          <b style={{ fontSize: "20px" }}>2. Thông Tin Khách Hàng</b>
+          <div className="d-flex justify-content-between flex-wrap mt-1">
+            <p style={{ fontSize: "18px" }} className="mt-1">
+              <b>Họ và Tên: </b>
+              {detailHoaDon?.khachHang?.tenkhachhang.trimEnd()}
+            </p>
+            <p style={{ fontSize: "18px" }} className="mt-1">
+              <b>Email: </b>
+              {detailHoaDon?.khachHang?.email.trimEnd()}
+            </p>
+            <p style={{ fontSize: "18px" }} className="mt-1">
+              <b>Số điện thoại: </b>
+              {detailHoaDon?.khachHang?.sodienthoai?.trimEnd()}
+            </p>
+          </div>
+        </div>
+        <hr />
+        <div>
+          <b style={{ fontSize: "20px" }}>3. Danh Sách Sản Phẩm</b>
+          <Table columns={columns2} dataSource={donHangCT} pagination={false} />
+        </div>
+      </Modal>
+      <Modal
+        title="Cập nhật trạng thái"
+        open={isModalOpenTT}
+        onOk={handleOk}
+        onCancel={handleCancelTT}
+      >
+        <Radio.Group onChange={onChange} value={value}>
+          <Space direction="vertical">
+            {listTT?.map((i) => (
+              <Radio value={i?.idTrangThaiHoaDon}>
+                {i?.tentrangthai.trimEnd()}
+              </Radio>
+            ))}
+          </Space>
+        </Radio.Group>
       </Modal>
     </div>
   );

@@ -254,7 +254,7 @@ function Dashboard({ children }) {
                 {
                   key: "11",
                   icon: <LiaFileInvoiceDollarSolid />,
-                  label: "Invoice",
+                  label: "Hóa Đơn",
                   onClick: () => navigate("/admin/invoice"),
                 },
               ]}

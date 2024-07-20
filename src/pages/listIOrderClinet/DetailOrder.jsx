@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getDetailOrder } from "../../redux/slice/orderSlice";
+// import { getDetailOrder } from "../../redux/slice/orderSlice";
+import { getListDonHangCT } from "../../redux/slice/donhangchitietSlice";
 import ProductOrder from "../../components/productorder/ProductOrder";
 import { LeftCircleOutlined } from "@ant-design/icons";
 import { Button } from "antd";
@@ -13,8 +14,8 @@ function DetailOrder() {
   const dispatch = useDispatch();
   useEffect(() => {
     if (id) {
-      dispatch(getDetailOrder(id)).then((res) => {
-        setDetailOrder(res.payload);
+      dispatch(getListDonHangCT(id)).then((res) => {
+        setDetailOrder(res.payload.result);
       });
     }
   }, [dispatch, id]);
@@ -22,12 +23,14 @@ function DetailOrder() {
   useEffect(() => {
     let total = 0;
     detailOrder?.forEach((item) => {
-      total += item.product.price * item.product.quantity;
+      total += item.chiTietSanPham?.dongia * item?.soluong;
     });
     setTotalPrice(total);
   }, [detailOrder]);
 
   const navigate = useNavigate();
+
+  console.log(detailOrder);
 
   return (
     <div>
@@ -54,16 +57,42 @@ function DetailOrder() {
           </div>
           <div>
             {detailOrder?.map((i) => (
-              <ProductOrder product={i?.product} />
+              <ProductOrder product={i} />
             ))}
           </div>
-          <div className="row justify-content-between mt-3">
-            <div className="col-10">
-              <h5 className="card-title fw-semibold mb-4">Total payment</h5>
+          <div className="d-flex justify-content-between mt-5">
+            <div>
+              <h5 className="card-title fw-semibold mb-4">
+                Tổng Tiền Đơn Hàng
+              </h5>
             </div>
-            <div className="col-2">
+            <div>
+              <p className="fw-bold" style={{ fontSize: "18px" }}>
+                {totalPrice?.toLocaleString("vi-VN")} VND
+              </p>
+            </div>
+          </div>
+          <div className="d-flex justify-content-between">
+            <div>
+              <h5 className="card-title fw-semibold mb-4">Khuyễn Mại(%)</h5>
+            </div>
+            <div>
+              <p className="fw-bold" style={{ fontSize: "18px" }}>
+                {detailOrder && detailOrder[0]?.hoaDon?.khuyenMai
+                  ? `${detailOrder[0]?.hoaDon.khuyenMai.phamtramgiam}%`
+                  : "0"}
+              </p>
+            </div>
+          </div>
+          <div className="d-flex justify-content-between mt-3">
+            <div>
+              <h5 className="card-title fw-semibold mb-4">Thành Tiền</h5>
+            </div>
+            <div>
               <p className="fw-bold">
-                {totalPrice.toLocaleString("vi-VN")} VND
+                {detailOrder &&
+                  detailOrder[0]?.hoaDon.tongtien.toLocaleString("vi-VN")}{" "}
+                VND
               </p>
             </div>
           </div>

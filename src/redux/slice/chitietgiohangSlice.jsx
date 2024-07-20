@@ -26,13 +26,10 @@ export const deleteGioHangCT = createAsyncThunk(
     return giohangct;
   }
 );
-// export const getGioHangCTbyIdGioHang = createAsyncThunk(
-//   "giohang/getGioHang",
-//   async (id) => {
-//     const giohangct = await chitietgiohangService.getGioHangCTbyIdGioHang(id);
-//     return giohangct;
-//   }
-// );
+export const deleteAll = createAsyncThunk("giohang/deleteAll", async (id) => {
+  const giohangct = await chitietgiohangService.deleteAllGioHangCT(id);
+  return giohangct;
+});
 
 // export const updateDeGiay = createAsyncThunk(
 //   "degiay/updateDeGiay",
