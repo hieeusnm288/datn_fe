@@ -144,4 +144,31 @@
 
         }
     }
+
+    .btn-quantity {
+        background-color   : #e1d7fe;
+        padding            : 5px;
+        // border-radius   : 50%;
+        height             : 30px;
+        display            : flex;
+        align-items        : center;
+        cursor             : pointer;
+        border             : none;
+        color              : #000;
+    }
+
+    .quantity {
+
+        padding        : 5px;
+        margin-left    : 10px;
+        margin-right   : 10px;
+        height         : 30px;
+        display        : flex;
+        width          : 45px;
+        justify-content: center;
+        align-items    : center;
+        border         : 1px solid #b8b8b8;
+        font-size      : 20px;
+    }
+
 }

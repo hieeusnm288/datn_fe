@@ -31,13 +31,16 @@ export const deleteAll = createAsyncThunk("giohang/deleteAll", async (id) => {
   return giohangct;
 });
 
-// export const updateDeGiay = createAsyncThunk(
-//   "degiay/updateDeGiay",
-//   async (data) => {
-//     const updateDeGiay = await degiayService.updateDeGiay(data?.id, data);
-//     return updateDeGiay;
-//   }
-// );
+export const updateGioHangCT = createAsyncThunk(
+  "giohangct/updateGioHangCT",
+  async (data) => {
+    const updateGioHang = await chitietgiohangService.updateGioHangCT(
+      data?.id,
+      data
+    );
+    return updateGioHang;
+  }
+);
 
 const chitietgiohangSlice = createSlice({
   name: "giohangct",

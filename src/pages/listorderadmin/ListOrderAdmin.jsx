@@ -38,7 +38,6 @@ function ListOrderAdmin() {
   const [totalPages, setTotalPages] = useState(0);
   const [trangThai, setTrangThai] = useState();
   const onChange = (e) => {
-    console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
 
@@ -61,6 +60,8 @@ function ListOrderAdmin() {
   }, [dispatch]);
   const showModal = (data) => {
     setDetailHoaDon(data);
+    console.log(data);
+    setValue(data.trangThaiHoaDon.idTrangThaiHoaDon);
     dispatch(getListDonHangCT(data?.idHoaDon)).then((res) => {
       if (res?.payload?.result) {
         setDonHangCT(res?.payload?.result);
@@ -92,6 +93,7 @@ function ListOrderAdmin() {
       if (res?.payload?.result) {
         setIsModalOpenTT(false);
         setIsModalOpen(false);
+        setValue();
         dispatch(getListDonHang(search)).then((res) => {
           if (res?.payload?.result) {
             setListOrder(res?.payload?.result.content);

@@ -5,7 +5,7 @@ import {
   getListCTSanPham,
   getCTSP,
 } from "../../redux/slice/chitietsanphamSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Slider from "react-slick";
 import { getKichCoByName } from "../../redux/slice/kichcoSlice";
 import { getMauSacByName } from "../../redux/slice/mausacSlice";
@@ -16,6 +16,7 @@ import {
 import { notification, Radio } from "antd";
 import "./DetailProduct.scss";
 import { jwtDecode } from "jwt-decode";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 function DetailProduct() {
   const navigate = useNavigate();
   const [listCTSanPham, setListCTSanPham] = useState([]);
@@ -27,6 +28,7 @@ function DetailProduct() {
   const [count, setCount] = useState();
   const [valueSize, setValueSize] = useState(1);
   const [username, setUsername] = useState();
+  const [quantity, setQuantity] = useState(1);
   const onChange1 = (e) => {
     setValue(e.target.value);
     dispatch(getKichCoByName(e.target.value)).then((res) => {
@@ -47,6 +49,14 @@ function DetailProduct() {
     dispatch(getMauSacByName(e.target.value)).then((res) => {
       setMauSac(res.payload?.result);
     });
+  };
+
+  const upQuantity = () => {
+    setQuantity(quantity + 1);
+  };
+
+  const downQuantity = () => {
+    setQuantity(quantity - 1);
   };
 
   const [price, setPrice] = useState();
@@ -112,6 +122,7 @@ function DetailProduct() {
         insertGioHangCT({
           idGioHang: localStorage.getItem("idGioHang").slice(1, -1),
           idChiTietSanPham: cstp.idChiTietSanPham,
+          soluong: quantity,
         })
       ).then((res) => {
         if (res?.payload?.result) {
@@ -123,6 +134,13 @@ function DetailProduct() {
           dispatch(
             getListGioCT(localStorage.getItem("idGioHang").slice(1, -1))
           );
+        } else {
+          notification.open({
+            message: "Không thể thêm vào giỏ hàng",
+            description:
+              "Số lượng sản phẩm không đủ hoặc bạn đã thêm quá 10 sản phẩm",
+            type: "error",
+          });
         }
       });
     }
@@ -179,13 +197,37 @@ function DetailProduct() {
                     ))}
                   </Radio.Group>
                 </li>
+                <li className="mt-3">
+                  <p>Số Lượng</p>
+                  <div className="d-flex">
+                    <button
+                      className="btn-quantity"
+                      onClick={downQuantity}
+                      disabled={quantity <= 1 || !cstpDetail ? true : false}
+                    >
+                      <MinusOutlined />
+                    </button>
+                    <div className="quantity">{quantity}</div>
+                    <button
+                      className="btn-quantity"
+                      disabled={
+                        quantity >= 10 || !cstpDetail || quantity >= count
+                          ? true
+                          : false
+                      }
+                      onClick={upQuantity}
+                    >
+                      <PlusOutlined />
+                    </button>
+                  </div>
+                </li>
               </ul>
 
               <button
                 type="button"
                 className="action"
                 onClick={() => addToCart(cstpDetail)}
-                disabled={count == 0 ? true : false}
+                disabled={count == 0 || !detail ? true : false}
               >
                 Add to Cart
               </button>

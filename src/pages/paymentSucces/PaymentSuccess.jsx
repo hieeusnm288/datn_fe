@@ -67,6 +67,7 @@ function PaymentSuccess() {
                   });
                   localStorage.removeItem("khuyenmai");
                   localStorage.removeItem("diachi");
+                  localStorage.removeItem("listgiohang");
                 }
               });
             }
