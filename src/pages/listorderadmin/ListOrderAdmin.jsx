@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Space, Table, Modal, Radio } from "antd";
+import {
+  Button,
+  Space,
+  Table,
+  Modal,
+  Radio,
+  notification,
+  Pagination,
+  Input,
+  Select,
+} from "antd";
 import { getListDonHang, updateDonHang } from "../../redux/slice/donHangSlice";
 import { getListDonHangCT } from "../../redux/slice/donhangchitietSlice";
 import { getListTrangThai } from "../../redux/slice/trangthaihoadonSlice";
@@ -9,6 +19,7 @@ import { EyeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 function ListOrderAdmin() {
   const dispatch = useDispatch();
+  const { Option } = Select;
   const [listOder, setListOrder] = useState();
   const [donHangCT, setDonHangCT] = useState();
   const navigate = useNavigate();
@@ -17,17 +28,30 @@ function ListOrderAdmin() {
   const [detailHoaDon, setDetailHoaDon] = useState();
   const [listTT, setListTT] = useState();
   const [value, setValue] = useState(1);
+  const [search, setSearch] = useState({
+    username: "",
+    idTrangThai: 0,
+    page: 0,
+  });
+  const [searchInput, setSearchInput] = useState();
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [trangThai, setTrangThai] = useState();
   const onChange = (e) => {
     console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
+
   useEffect(() => {
-    dispatch(getListDonHang()).then((res) => {
+    dispatch(getListDonHang(search)).then((res) => {
       if (res?.payload?.result) {
-        setListOrder(res?.payload?.result);
+        setListOrder(res?.payload?.result.content);
+        setTotalElements(res?.payload?.result.page.totalElements);
+        setTotalPages(res?.payload?.result.page.totalPages);
       }
     });
-  }, [dispatch]);
+  }, [dispatch, search]);
+
   useEffect(() => {
     dispatch(getListTrangThai()).then((res) => {
       if (res?.payload?.result) {
@@ -68,10 +92,21 @@ function ListOrderAdmin() {
       if (res?.payload?.result) {
         setIsModalOpenTT(false);
         setIsModalOpen(false);
-        dispatch(getListDonHang()).then((res) => {
+        dispatch(getListDonHang(search)).then((res) => {
           if (res?.payload?.result) {
-            setListOrder(res?.payload?.result);
+            setListOrder(res?.payload?.result.content);
           }
+        });
+        notification.open({
+          message: "Thành công!",
+          description: "Dữ liệu đã được cập nhật",
+          type: "success",
+        });
+      } else {
+        notification.open({
+          message: "Thất bại!",
+          description: "Cập nhật không hợp lệ",
+          type: "error",
         });
       }
     });
@@ -79,9 +114,17 @@ function ListOrderAdmin() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  console.log(detailHoaDon);
+  // console.log(detailHoaDon);
   const handleCancelTT = () => {
     setIsModalOpenTT(false);
+  };
+
+  const conChangePage = (page) => {
+    setSearch({
+      username: "",
+      idTrangThai: 0,
+      page: page - 1,
+    });
   };
   const columns = [
     {
@@ -90,6 +133,18 @@ function ListOrderAdmin() {
       key: "idHoaDon",
       width: 100,
       render: (val, record, index) => <>{index + 1}</>,
+    },
+    {
+      title: "Khách Hàng",
+      dataIndex: "ngaytao",
+      key: "ngaytao",
+      width: 600,
+      render: (_, record) => (
+        <>
+          {record?.khachHang?.tenkhachhang}(
+          {record?.khachHang?.username.trimEnd()})
+        </>
+      ),
     },
     {
       title: "Ngày đặt",
@@ -206,10 +261,68 @@ function ListOrderAdmin() {
       render: (_, record) => <>{record.soluong}</>,
     },
   ];
+  const conChange = (e) => {
+    setSearchInput(e.target.value);
+  };
+  const onChangeTT = (value) => {
+    setTrangThai(value);
+    setSearch({
+      username: searchInput ? searchInput : "",
+      idTrangThai: value,
+      page: 0,
+    });
+  };
+  const onSearch = () => {
+    setSearch({
+      username: searchInput,
+      idTrangThai: trangThai ? trangThai : 0,
+      page: 0,
+    });
+  };
   return (
     <div>
       <p>Danh sách đơn hàng</p>
+      <div className="d-flex justify-content-between mb-3">
+        <div style={{ width: "40%" }}>
+          <label className="mb-1">Tìm kiếm theo username khách hàng</label>
+          <Space.Compact
+            style={{
+              width: "100%",
+            }}
+          >
+            <Input placeholder="Nhập tên sản phẩm" onChange={conChange} />
+            <Button type="primary" onClick={onSearch}>
+              Tìm Kiếm
+            </Button>
+          </Space.Compact>
+        </div>
+        <div style={{ width: "40%" }}>
+          <label className="mb-1">Lọc theo trạng thái</label>
+          <div>
+            <Select
+              placeholder="Chọn Trạng Thái"
+              style={{ width: "100%" }}
+              onChange={onChangeTT}
+            >
+              <Option value={0}>Tất cả</Option>
+              {listTT?.map((i) => (
+                <Option value={i?.idTrangThaiHoaDon}>
+                  {i?.tentrangthai.trimEnd()}
+                </Option>
+              ))}
+            </Select>
+          </div>
+        </div>
+      </div>
       <Table columns={columns} dataSource={listOder} pagination={false} />
+      <Pagination
+        onChange={conChangePage}
+        className="mt-3"
+        defaultCurrent={1}
+        total={totalElements}
+        size={8}
+        style={{ float: "right" }}
+      />
       <Modal
         title="Chi Tiết Đơn Hàng"
         open={isModalOpen}

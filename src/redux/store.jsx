@@ -21,6 +21,7 @@ import diachiSlice from "./slice/diachiSlice";
 import donHangSlice from "./slice/donHangSlice";
 import donHangCTSlice from "./slice/donhangchitietSlice";
 import trangthaihoadonSlice from "./slice/trangthaihoadonSlice";
+import thongkeSlice from "./slice/thongkeSlice";
 
 const store = configureStore({
   reducer: {
@@ -45,6 +46,7 @@ const store = configureStore({
     donhang: donHangSlice.reducer,
     donhangct: donHangCTSlice.reducer,
     trangthai: trangthaihoadonSlice.reducer,
+    thongke: thongkeSlice.reducer,
   },
 });
 export default store;

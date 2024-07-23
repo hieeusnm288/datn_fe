@@ -81,9 +81,9 @@ function AddKM() {
           const date2 = new Date(res?.payload?.result.ngayketthuc);
           form.setFieldsValue({
             makhuyenmai: res?.payload?.result.makhuyenmai.trimEnd(),
-            phamtramgiam: res?.payload?.result.phamtramgiam.trimEnd(),
-            dieukien: res?.payload?.result.dieukien.trimEnd(),
-            soluong: res?.payload?.result.soluong.trimEnd(),
+            phamtramgiam: res?.payload?.result.phamtramgiam,
+            dieukien: res?.payload?.result.dieukien,
+            soluong: res?.payload?.result.soluong,
             ngaybatdau: moment(date),
             ngayketthuc: moment(date2),
             trangthai: res?.payload?.result.trangthai,

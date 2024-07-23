@@ -26,6 +26,7 @@ import AddMauSac from "../pages/mausac/AddMauSac";
 import ListMauSac from "../pages/mausac/ListMauSac";
 import ListNhanVien from "../pages/nhanvien/ListNhanVien";
 import ThemNhanVien from "../pages/nhanvien/ThemNhanVien";
+import PaymentSuccess from "../pages/paymentSucces/PaymentSuccess";
 import AddDetailProduct from "../pages/product/AddDetailProduct";
 import AddProduct from "../pages/product/AddProduct";
 import ListProduct from "../pages/product/ListProduct";
@@ -204,6 +205,11 @@ const publicRouter = [
   {
     path: "/my-profile",
     component: MyProfile,
+    layout: DashbordClient,
+  },
+  {
+    path: "/payment-succes",
+    component: PaymentSuccess,
     layout: DashbordClient,
   },
   {

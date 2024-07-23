@@ -9,7 +9,7 @@ const khachhangService = {
     return axios.post("/khachhang/add", data);
   },
   getDetailKhachHang(id) {
-    return axios.get(`khachhang/${id}`);
+    return axiosLogin.get(`khachhang/${id}`);
   },
   getDetailNhanVienByUsername(usernmae) {
     return axiosLogin.get(`khachhang/detail/${usernmae}`);

@@ -10,9 +10,10 @@ import {
   Space,
   Select,
   Modal,
+  Result,
 } from "antd";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getListGioCT, deleteAll } from "../../redux/slice/chitietgiohangSlice";
 import { getListDiaChi, getDiaChi } from "../../redux/slice/diachiSlice";
@@ -21,12 +22,16 @@ import { getlistKhuyenMai } from "../../redux/slice/khuyenmaiSlice";
 import { getKhachHang } from "../../redux/slice/khachhangSlice";
 import { insertDonHang } from "../../redux/slice/donHangSlice";
 import { insertDonHangCT } from "../../redux/slice/donhangchitietSlice";
+import paymentService from "../../service/paymentService";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 
 function CartPage() {
   const { listDiaChi } = useSelector((state) => state.diachi);
   const { listKhuyenMai, totalElements } = useSelector(
     (state) => state.khuyenmai
   );
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [trangThai, setTrangThai] = useState(1);
   const { listPTTT } = useSelector((state) => state.pttt);
@@ -38,12 +43,25 @@ function CartPage() {
   const [khachHang, setKhachHang] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [paymentSuccess, setPaymentSuccess] = useState();
   const { listGioHangCT } = useSelector((state) => state.giohangct);
+
+  const [isModalOpenCF, setIsModalOpenCF] = useState(false);
+  const showModalCF = () => {
+    setIsModalOpenCF(true);
+  };
+  // const handleOkCF = () => {
+  //   setIsModalOpen(false);
+  // };
+  const handleCancelCF = () => {
+    setIsModalOpenCF(false);
+  };
+
   useEffect(() => {
     dispatch(getListGioCT(localStorage.getItem("idGioHang").slice(1, -1))).then(
       (res) => {
-        if (res?.payload.result) {
-          setCartItems(res?.payload.result);
+        if (res?.payload?.result) {
+          setCartItems(res?.payload?.result);
         }
       }
     );
@@ -51,6 +69,16 @@ function CartPage() {
   useEffect(() => {
     dispatch(getlistKhuyenMai(trangThai));
   }, [dispatch, trangThai]);
+
+  useEffect(() => {
+    const vnp_ResponseCode = query.get("vnp_ResponseCode");
+    if (vnp_ResponseCode === "00") {
+      setPaymentSuccess(true);
+    } else {
+      setPaymentSuccess(false);
+    }
+  }, [query]);
+
   const [form] = Form.useForm();
   // console.log(listGioHangCT);
   useEffect(() => {
@@ -107,10 +135,16 @@ function CartPage() {
         setValueDC(
           `${res?.payload?.result?.chitiet?.trimEnd()} - ${res?.payload?.result?.phuongxa?.trimEnd()} - ${res?.payload?.result?.quanhuyen?.trimEnd()} - ${res?.payload?.result?.thanhpho?.trimEnd()}`
         );
+        localStorage.setItem(
+          "diachi",
+          JSON.stringify(
+            `${res?.payload?.result?.chitiet?.trimEnd()} - ${res?.payload?.result?.phuongxa?.trimEnd()} - ${res?.payload?.result?.quanhuyen?.trimEnd()} - ${res?.payload?.result?.thanhpho?.trimEnd()}`
+          )
+        );
       }
     });
   };
-  console.log(valueDC);
+  // console.log(valueDC);
   const [valuePTTT, setValuePTTT] = useState(1);
   const onChangePTTT = (e) => {
     setValuePTTT(e.target.value);
@@ -134,8 +168,10 @@ function CartPage() {
         type: "error",
       });
       setValueKM();
+      // localStorage.setItem("khuyenmai", null);
     } else {
       setValueKM(ma);
+      localStorage.setItem("khuyenmai", JSON.stringify(ma?.idKhuyenMai));
     }
   };
   useEffect(() => {
@@ -144,48 +180,110 @@ function CartPage() {
       total += item.tongtien * item.soluong;
     });
     setTotalPrice(total);
+    localStorage.setItem("total", JSON.stringify(total));
   }, [listGioHangCT]);
 
-  console.log(listGioHangCT);
+  // console.log(listGioHangCT);
 
-  const onFinish = (values) => {
-    form.validateFields().then((values) => {
-      dispatch(
-        insertDonHang({
-          idKhachHang: khachHang.idKhachHang,
-          idKhuyenMai: valueKM ? valueKM?.idKhuyenMai : null,
-          tongtien: valueKM
-            ? totalPrice - (totalPrice * valueKM?.phamtramgiam) / 100
-            : totalPrice,
-          diachi: valueDC,
-          idTrangThaiDonHang: 1,
-          idPhuongThucThanhToan: valuePTTT,
-        })
-      ).then((res) => {
-        if (res?.payload?.result) {
-          listGioHangCT?.map((i) =>
-            dispatch(
-              insertDonHangCT({
-                idHoaDon: res?.payload?.result.idHoaDon,
-                idChiTietSanPham: i?.chiTietSanPham?.idChiTietSanPham,
-                soluong: i?.soluong,
-              })
-            ).then((res) => {
-              if (res?.payload?.result) {
-                notification.open({
-                  message: "Thành công!",
-                  description: "Đặt hàng thành công",
-                  type: "success",
-                });
-                navigate(`/my-order`);
-                // dispatch(
-                //   deleteAll(localStorage.getItem("idGioHang").slice(1, -1))
-                // );
-              }
-            })
-          );
-        }
+  const handlePayment = async (amout) => {
+    try {
+      const paymentUrl = await paymentService.createPayment({
+        amount: amout,
       });
+      window.location.href = paymentUrl?.result;
+    } catch (error) {
+      console.error("Error during payment: ", error);
+    }
+  };
+  // const handlePayment = async (amount) => {
+  //   try {
+  //     const paymentUrl = await paymentService.createPayment({
+  //       amount: amount,
+  //     });
+  //     // Mở tab mới để thanh toán
+  //     const paymentWindow = window.open(paymentUrl.result, "_blank");
+  //     // Lắng nghe kết quả từ tab thanh toán
+  //     window.addEventListener("message", (event) => {
+  //       if (event.origin !== window.location.origin) {
+  //         // Kiểm tra origin của thông báo để đảm bảo an toàn
+  //         return;
+  //       }
+  //       const { result } = event.data;
+  //       if (result === "Success") {
+  //         alert("Thanh toán thành công!");
+  //         // Cập nhật trạng thái đơn hàng hoặc logic khác
+  //       } else if (result === "Failed") {
+  //         alert("Thanh toán thất bại!");
+  //         // Logic xử lý khi thanh toán thất bại
+  //       }
+  //       paymentWindow.close();
+  //     });
+  //     // Hiển thị thông báo đang xử lý thanh toán
+  //     alert("Đang xử lý thanh toán...");
+  //   } catch (error) {
+  //     console.error("Error during payment: ", error);
+  //   }
+  // };
+
+  const onFinish = () => {
+    form.validateFields().then((values) => {
+      if (valuePTTT === 3) {
+        localStorage.setItem("listgiohang", JSON.stringify(listGioHangCT));
+        handlePayment(
+          valueKM
+            ? totalPrice - (totalPrice * valueKM?.phamtramgiam) / 100
+            : totalPrice
+        );
+      } else {
+        dispatch(
+          insertDonHang({
+            idKhachHang: khachHang.idKhachHang,
+            idKhuyenMai: valueKM ? valueKM?.idKhuyenMai : null,
+            tongtien: valueKM
+              ? totalPrice - (totalPrice * valueKM?.phamtramgiam) / 100
+              : totalPrice,
+            diachi: valueDC,
+            idTrangThaiDonHang: 1,
+            idPhuongThucThanhToan: valuePTTT,
+          })
+        ).then((res) => {
+          if (res?.payload?.result) {
+            listGioHangCT?.map((i) =>
+              dispatch(
+                insertDonHangCT({
+                  idHoaDon: res?.payload?.result.idHoaDon,
+                  idChiTietSanPham: i?.chiTietSanPham?.idChiTietSanPham,
+                  soluong: i?.soluong,
+                })
+              ).then((res) => {
+                if (res?.payload?.result) {
+                  dispatch(
+                    deleteAll(localStorage.getItem("idGioHang").slice(1, -1))
+                  ).then((res) => {
+                    if (res?.payload?.result) {
+                      dispatch(
+                        getListGioCT(
+                          localStorage.getItem("idGioHang").slice(1, -1)
+                        )
+                      ).then((res) => {
+                        if (res?.payload?.result) {
+                          setCartItems(res?.payload?.result);
+                        }
+                      });
+                      notification.open({
+                        message: "Thành công!",
+                        description: "Đặt hàng thành công",
+                        type: "success",
+                      });
+                      navigate(`/my-order`);
+                    }
+                  });
+                }
+              })
+            );
+          }
+        });
+      }
     });
   };
   const onFinishFailed = (errorInfo) => {};
@@ -230,7 +328,7 @@ function CartPage() {
                   type="button"
                   className={!payment ? "btn btn-primary" : "btn btn-danger"}
                   onClick={Onpayment}
-                  disabled={cartItems.length <= 0 ? true : false}
+                  disabled={listGioHangCT.length <= 0 ? true : false}
                 >
                   {!payment ? "Đặt Hàng" : "Cancel"}
                 </button>
@@ -254,7 +352,7 @@ function CartPage() {
             <div className="card-body">
               <Form
                 name="basic"
-                onFinish={onFinish}
+                // onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
                 layout="vertical"
@@ -399,7 +497,11 @@ function CartPage() {
                   </div>
                 </div>
                 <Form.Item>
-                  <Button type="primary" htmlType="submit">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    onClick={showModalCF}
+                  >
                     Đặt Hàng
                   </Button>
                 </Form.Item>
@@ -414,16 +516,40 @@ function CartPage() {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        width={800}
       >
         {listKhuyenMai?.map((i) => (
           <div className="d-flex justify-content-between">
             <p>
-              Mã: {i?.makhuyenmai} - Phần trăn giảm: {i?.phantramgiam} - Điều
-              kiên {i?.dieukien?.toLocaleString("vi-VN")}
+              Mã: {i?.makhuyenmai} - Phần trăn giảm: {i?.phamtramgiam}% - Điều
+              kiện Hóa Đơn Tối Thiểu: {i?.dieukien?.toLocaleString("vi-VN")} VND
+              - Số Lượng {i?.soluong}
             </p>
-            <Button onClick={() => handleChangeKM(i)}>Áp dụng</Button>
+            <Button
+              onClick={() => handleChangeKM(i)}
+              disabled={i?.soluong <= 0 ? true : false}
+            >
+              Áp dụng
+            </Button>
           </div>
         ))}
+      </Modal>
+      <Modal
+        // title="Basic Modal"
+        open={isModalOpenCF}
+        // onOk={handleOk}
+        onCancel={handleCancelCF}
+        footer={null}
+      >
+        <Result
+          icon={<ShoppingCartOutlined />}
+          title="Bạn có chắc chắn muốn đặt hàng không ?"
+          extra={
+            <Button onClick={onFinish} type="primary">
+              Xác Nhận
+            </Button>
+          }
+        />
       </Modal>
     </div>
   );

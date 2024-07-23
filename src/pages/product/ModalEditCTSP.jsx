@@ -22,8 +22,8 @@ function ModalEditCTSP({ visible, onCancel, data }) {
     if (listCTSanPham) {
       listCTSanPham?.map((i, index) =>
         form.setFieldsValue({
-          [`soluong-${index}`]: i?.soluongton.trimEnd(),
-          [`dongia-${index}`]: i?.dongia.trimEnd(),
+          [`soluong-${index}`]: i?.soluongton,
+          [`dongia-${index}`]: i?.dongia,
           [`trangthai-${index}`]: Number(i?.trangthai),
         })
       );
@@ -44,6 +44,11 @@ function ModalEditCTSP({ visible, onCancel, data }) {
           })
         ).then((res) => {
           if (res.payload) {
+            notification.open({
+              message: "Thành công!",
+              description: "Dữ liệu đã được cập nhật",
+              type: "success",
+            });
             onCancel();
           }
         })

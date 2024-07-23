@@ -12,8 +12,8 @@ export const insertDonHang = createAsyncThunk(
 
 export const getListDonHang = createAsyncThunk(
   "donhang/getListDonHang",
-  async () => {
-    const listDonHang = await donHangService.getListDonHangAll();
+  async (data) => {
+    const listDonHang = await donHangService.getListDonHangAll(data);
     return listDonHang;
   }
 );
@@ -67,7 +67,7 @@ const donHangSlice = createSlice({
       })
       .addCase(getListDonHang.fulfilled, (state, action) => {
         state.loadingCate = false;
-        state.listDonHang = action.payload.result;
+        state.listDonHang = action.payload.result.content;
         state.totalPages = action.payload.totalPages;
         state.number = action.payload.number;
         state.totalElements = action.payload.totalElements;

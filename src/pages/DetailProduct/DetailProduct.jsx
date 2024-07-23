@@ -154,9 +154,11 @@ function DetailProduct() {
         <div className="col-5">
           <div className="price-product">
             <p>{price?.toLocaleString("vi-VN")} VND</p>
-            <p>{count == 0 ? "Hết Hàng" : ""}</p>
           </div>
-
+          <p>
+            Số lượng:{" "}
+            {count == 0 ? <b style={{ color: "red" }}>Hết Hàng</b> : count}
+          </p>
           <div className="km">
             <div className="card">
               <p className="desc">Kích Cỡ và Màu Sắc</p>
