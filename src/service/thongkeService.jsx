@@ -5,12 +5,31 @@ const thongkeService = {
   thongKeDoanhThu(id) {
     return axiosLogin.get(`/thongke/doanh-thu`);
   },
-  thongKeHoaDon() {
-    return axiosLogin.get("/thongke/tonghoadon");
+  thongKeHoaDonTheoNam(year) {
+    return axiosLogin.get(`/thongke/hoadontheonam/${year}`);
   },
-  thongKeHoaDoHT() {
-    return axiosLogin.get("/thongke/tonghoadon-ht");
+  thongKeHoaDonTheoThang(month, year) {
+    return axiosLogin.get(
+      `/thongke/hoadontheothang/find?month=${month}&year=${year}`
+    );
   },
+  thongKeHoaDoHTTheoNam(year) {
+    return axiosLogin.get(`/thongke/hoadontheonam-ht/${year}`);
+  },
+  thongKeHoaDoHTTheoThang(month, year) {
+    return axiosLogin.get(
+      `/thongke/hoadontheothang-ht/find?month=${month}&year=${year}`
+    );
+  },
+
+  thongKeSanPhamBanChay() {
+    return axiosLogin.get("/thongke/sanphambanchay");
+  },
+
+  thongKeSanSapHet() {
+    return axiosLogin.get("/thongke/sanphamsaphet");
+  },
+
   thongKeKhachHang() {
     return axiosLogin.get("/thongke/tongkhachhang");
   },

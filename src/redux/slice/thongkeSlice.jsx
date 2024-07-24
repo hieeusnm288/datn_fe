@@ -6,18 +6,56 @@ export const getDoanhThu = createAsyncThunk("thongke/getDoanhThu", async () => {
   return doanhthu;
 });
 
-export const getTongHoaDon = createAsyncThunk(
+export const getHoaDonByYear = createAsyncThunk(
   "thongke/getTongHoaDon",
-  async () => {
-    const tonghoadon = await thongkeService.thongKeHoaDon();
+  async (year) => {
+    const tonghoadon = await thongkeService.thongKeHoaDonTheoNam(year);
     return tonghoadon;
   }
 );
 
-export const getTongHoaDonHT = createAsyncThunk(
+export const getTongHoaDonHTByYear = createAsyncThunk(
+  "thongke/getTongHoaDonHT",
+  async (year) => {
+    const tonghoadon = await thongkeService.thongKeHoaDoHTTheoNam(year);
+    return tonghoadon;
+  }
+);
+
+export const getTongHoaTheoThang = createAsyncThunk(
+  "thongke/getTongHoaDonHT",
+  async (data) => {
+    const tonghoadon = await thongkeService.thongKeHoaDonTheoThang(
+      data.month,
+      data.year
+    );
+    return tonghoadon;
+  }
+);
+
+export const getTongHoaDonHTByThang = createAsyncThunk(
+  "thongke/getTongHoaDonHT",
+  async (data) => {
+    const tonghoadon = await thongkeService.thongKeHoaDoHTTheoThang(
+      data.month,
+      data.year
+    );
+    return tonghoadon;
+  }
+);
+
+export const getSanPhamBanChay = createAsyncThunk(
   "thongke/getTongHoaDonHT",
   async () => {
-    const tonghoadon = await thongkeService.thongKeHoaDoHT();
+    const tonghoadon = await thongkeService.thongKeSanPhamBanChay();
+    return tonghoadon;
+  }
+);
+
+export const getSanPhamSapHet = createAsyncThunk(
+  "thongke/getTongHoaDonHT",
+  async () => {
+    const tonghoadon = await thongkeService.thongKeSanSapHet();
     return tonghoadon;
   }
 );

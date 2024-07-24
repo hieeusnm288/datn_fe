@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "antd";
+import { Card } from "antd";
 import {
   Bar,
   BarChart,
@@ -14,17 +14,25 @@ import {
 import "./Dashbordpage.scss";
 import {
   getDoanhThu,
-  getTongHoaDon,
-  getTongHoaDonHT,
+  getHoaDonByYear,
+  getSanPhamBanChay,
+  getSanPhamSapHet,
+  getTongHoaDonHTByThang,
+  getTongHoaDonHTByYear,
+  getTongHoaTheoThang,
   getTongKhachHnang,
 } from "../../redux/slice/thongkeSlice";
 import { useDispatch, useSelector } from "react-redux";
-
+const { Meta } = Card;
 function DashboardPage() {
   const dispatch = useDispatch();
   const [doanhThu, setDoanhThu] = useState();
   const [hoaDonTong, setHoaDonTong] = useState();
   const [hoaDonHoanThanh, setHoaDonHoanThanh] = useState();
+  const [hoaDonTongMonth, setHoaDonTongMonth] = useState();
+  const [hoaDonHoanThanhMonth, setHoaDonHoanThanhMonth] = useState();
+  const [listSanPhamBanChay, setListSanPhamBanChay] = useState();
+  const [listSanPhamSapHet, setListSanPhamSapHet] = useState();
   const [khachHang, setKhachHang] = useState();
   useEffect(() => {
     dispatch(getDoanhThu()).then((res) => {
@@ -35,7 +43,9 @@ function DashboardPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getTongHoaDon()).then((res) => {
+    const now = new Date();
+    const year = now.getFullYear();
+    dispatch(getHoaDonByYear(year)).then((res) => {
       if (res?.payload?.result) {
         setHoaDonTong(res?.payload?.result);
       }
@@ -43,9 +53,43 @@ function DashboardPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getTongHoaDonHT()).then((res) => {
+    const now = new Date();
+    const year = now.getFullYear();
+    dispatch(getTongHoaDonHTByYear(year)).then((res) => {
       if (res?.payload?.result) {
         setHoaDonHoanThanh(res?.payload?.result);
+      }
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    dispatch(
+      getTongHoaDonHTByThang({
+        month: month,
+        year: year,
+      })
+    ).then((res) => {
+      if (res?.payload?.result) {
+        setHoaDonHoanThanhMonth(res?.payload?.result);
+      }
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    dispatch(
+      getTongHoaTheoThang({
+        month: month,
+        year: year,
+      })
+    ).then((res) => {
+      if (res?.payload?.result) {
+        setHoaDonTongMonth(res?.payload?.result);
       }
     });
   }, [dispatch]);
@@ -57,6 +101,25 @@ function DashboardPage() {
       }
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getSanPhamBanChay()).then((res) => {
+      if (res?.payload?.result) {
+        setListSanPhamBanChay(res?.payload?.result);
+      }
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getSanPhamSapHet()).then((res) => {
+      if (res?.payload?.result) {
+        setListSanPhamSapHet(res?.payload?.result);
+      }
+    });
+  }, [dispatch]);
+
+  console.log("Bán Chạy: ", listSanPhamBanChay);
+  console.log("Sắp Hết: ", listSanPhamSapHet);
 
   return (
     <div className="dashborad-page">
@@ -101,48 +164,127 @@ function DashboardPage() {
             <div className="card-body p-4">
               <div className="row">
                 <div>
-                  <div className="fs-2 fw-bold text-primary">{khachHang}</div>
-                  <div className="content-text">Số Khách Hàng</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className="card overflow-hidden mt-3"
-            style={{
-              border: "none",
-              boxShadow:
-                "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px",
-            }}
-          >
-            <div className="card-body p-4">
-              <div className="row">
-                <div>
-                  <div className="fs-2 fw-bold text-primary">{hoaDonTong}</div>
-                  <div className="content-text">Tổng Hóa Đơn</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className="card overflow-hidden mt-3"
-            style={{
-              border: "none",
-              boxShadow:
-                "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px",
-            }}
-          >
-            <div className="card-body p-4">
-              <div className="row">
-                <div>
-                  <div className="fs-2 fw-bold text-primary">
-                    {hoaDonHoanThanh}
+                  <div className="fs-4 fw-bold text-primary">
+                    Số Khách Hàng:{" "}
                   </div>
-                  <div className="content-text">Hóa đơn đã hoàn thành</div>
+                  <div className="content-text">
+                    <div className="content-text fs-5">
+                      Số lượng khách hàng:{" "}
+                      <span className="fw-bold text-primary">{khachHang}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <div
+            className="card overflow-hidden mt-3"
+            style={{
+              border: "none",
+              boxShadow:
+                "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px",
+            }}
+          >
+            <div className="card-body p-4">
+              <div className="row">
+                <div>
+                  <div className="fs-4 fw-bold text-primary">
+                    Tổng Hóa Đơn Trong Năm
+                  </div>
+                  <div className="content-text fs-5">
+                    Tổng Hóa Đơn:{" "}
+                    <span className="fw-bold text-primary">{hoaDonTong}</span>
+                  </div>
+                  <div className="content-text fs-5">
+                    Hóa Đơn Hoàn Thành:{" "}
+                    <span className="fw-bold text-primary">
+                      {hoaDonHoanThanh}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="card overflow-hidden mt-3"
+            style={{
+              border: "none",
+              boxShadow:
+                "rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px",
+            }}
+          >
+            <div className="card-body p-4">
+              <div className="row">
+                <div>
+                  <div className="fs-4 fw-bold text-primary">
+                    Tổng Hóa Đơn Trong Tháng
+                  </div>
+                  <div className="content-text fs-5">
+                    Tổng Hóa Đơn:{" "}
+                    <span className="fw-bold text-primary">
+                      {hoaDonTongMonth}
+                    </span>
+                  </div>
+                  <div className="content-text fs-5">
+                    Hóa Đơn Hoàn Thành:{" "}
+                    <span className="fw-bold text-primary">
+                      {hoaDonHoanThanhMonth}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="mt-3">
+        <h5>Sản Phẩm Bán Chạy</h5>
+        <div className="d-flex justify-content-between">
+          {listSanPhamBanChay?.map((i) => (
+            <Card
+              style={{
+                width: 240,
+              }}
+              cover={
+                <img
+                  alt="example"
+                  style={{ width: "100%", height: "300px" }}
+                  src={`http://localhost:8080/api/v1/thuonghieu/logo/${i.hinhAnh}`}
+                />
+              }
+            >
+              <b className="fs-6">{i?.tenSanPham}</b>
+              <p className="fs-8">
+                Màu Sắc: {i?.mauSac}, Kích Cỡ: {i?.kichCo}
+              </p>
+              <p className="fs-8">Số lượng bán: {i?.soLuong}</p>
+            </Card>
+          ))}
+        </div>
+      </div>
+      <div className="mt-3">
+        <h5>Sản Phẩm Sắp Hết</h5>
+        <div className="d-flex justify-content-between">
+          {listSanPhamSapHet?.map((i) => (
+            <Card
+              style={{
+                width: 240,
+              }}
+              cover={
+                <img
+                  alt="example"
+                  style={{ width: "100%", height: "300px" }}
+                  src={`http://localhost:8080/api/v1/thuonghieu/logo/${i.hinhAnh}`}
+                />
+              }
+            >
+              <b className="fs-6">{i?.tenSanPham}</b>
+              <p className="fs-8">
+                Màu Sắc: {i?.mauSac}, Kích Cỡ: {i?.kichCo}
+              </p>
+              <p className="fs-8">Số lượng còn lại: {i?.soLuong}</p>
+            </Card>
+          ))}
         </div>
       </div>
     </div>
