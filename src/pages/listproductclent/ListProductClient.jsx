@@ -63,11 +63,13 @@ function ListProductClient() {
         </Space.Compact>
       </div>
       <div className="row">
-        {listSanPham?.map((i) => (
-          <div className="col-4 mb-3 hover">
-            <CradProduct product={i} />
-          </div>
-        ))}
+        {listSanPham
+          ?.filter((i) => i.trangthai === 1)
+          .map((i) => (
+            <div className="col-4 mb-3 hover" key={i.id}>
+              <CradProduct product={i} />
+            </div>
+          ))}
       </div>
     </div>
   );

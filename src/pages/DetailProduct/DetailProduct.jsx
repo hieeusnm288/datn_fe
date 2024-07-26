@@ -24,6 +24,7 @@ function DetailProduct() {
   const [mauSac, setMauSac] = useState();
   const [kichCo, setKichCo] = useState();
   const [cstpDetail, setCtspDetail] = useState();
+  const [trangThai, setTrangThai] = useState();
   const [value, setValue] = useState(1);
   const [count, setCount] = useState();
   const [valueSize, setValueSize] = useState(1);
@@ -83,6 +84,7 @@ function DetailProduct() {
         setCtspDetail(res.payload?.result);
         setPrice(res.payload?.result?.dongia);
         setCount(res.payload?.result?.soluongton);
+        setTrangThai(res.payload?.result.trangthai);
       });
     }
   }, [id, dispatch, mauSac, kichCo]);
@@ -149,7 +151,10 @@ function DetailProduct() {
   return (
     <div className="detail-product">
       <div className="name-product">
-        <p>{detail?.tensanpham}</p>
+        <span>{detail?.tensanpham}</span>
+        <span style={{ color: "red" }}>
+          {trangThai === 0 ? "(Sản phẩm đã ngừng bán)" : ""}
+        </span>
       </div>
       <div className="row justify-content-between">
         <div className="col-6">
@@ -227,7 +232,9 @@ function DetailProduct() {
                 type="button"
                 className="action"
                 onClick={() => addToCart(cstpDetail)}
-                disabled={count == 0 || !detail ? true : false}
+                disabled={
+                  count == 0 || !cstpDetail || trangThai === 0 ? true : false
+                }
               >
                 Add to Cart
               </button>

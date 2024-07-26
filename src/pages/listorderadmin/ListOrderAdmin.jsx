@@ -292,7 +292,7 @@ function ListOrderAdmin() {
               width: "100%",
             }}
           >
-            <Input placeholder="Nhập tên sản phẩm" onChange={conChange} />
+            <Input placeholder="Nhập tên username" onChange={conChange} />
             <Button type="primary" onClick={onSearch}>
               Tìm Kiếm
             </Button>

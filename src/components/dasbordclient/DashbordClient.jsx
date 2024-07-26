@@ -38,7 +38,7 @@ function DashbordClient({ children }) {
         localStorage.setItem("username", JSON.stringify(userData.sub + ""));
         localStorage.setItem("role", JSON.stringify("khachhang"));
         localStorage.setItem("idKhangHang", JSON.stringify(userData.id));
-        dispatch(getGioHang(userData?.username)).then((res) => {
+        dispatch(getGioHang(userData?.username.trimEnd())).then((res) => {
           if (res?.payload?.result) {
             localStorage.setItem(
               "idGioHang",
