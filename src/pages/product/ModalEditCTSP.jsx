@@ -103,10 +103,22 @@ function ModalEditCTSP({ visible, onCancel, data }) {
                   rules={[
                     {
                       required: true,
-                      message: "Không được bỏ trống",
+                      message: "Đơn giá là bắt buộc.",
                     },
                     {
-                      validateNumber,
+                      type: "number",
+                      message: "Đơn giá phải là một số.",
+                      transform(value) {
+                        return Number(value);
+                      },
+                    },
+                    {
+                      type: "number",
+                      min: 1,
+                      message: "Đơn giá lớn hơn 1",
+                      transform(value) {
+                        return Number(value);
+                      },
                     },
                   ]}
                   style={{ width: "33%" }}
@@ -119,10 +131,22 @@ function ModalEditCTSP({ visible, onCancel, data }) {
                   rules={[
                     {
                       required: true,
-                      message: "Không bỏ trống",
+                      message: "Số lượng là bắt buộc.",
                     },
                     {
-                      validateNumber,
+                      type: "number",
+                      message: "Số lượng phải là một số.",
+                      transform(value) {
+                        return Number(value);
+                      },
+                    },
+                    {
+                      type: "number",
+                      min: 0,
+                      message: "Số lượng không thể âm",
+                      transform(value) {
+                        return Number(value);
+                      },
                     },
                   ]}
                   style={{ width: "33%" }}

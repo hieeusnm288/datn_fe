@@ -207,9 +207,22 @@ function AddKM() {
                       rules={[
                         {
                           required: true,
+                          message: "Số lượng là bắt buộc.",
                         },
                         {
-                          validateNumber,
+                          type: "number",
+                          message: "Số lượng phải là một số.",
+                          transform(value) {
+                            return Number(value);
+                          },
+                        },
+                        {
+                          type: "number",
+                          min: 0,
+                          message: "Số lượng không thể âm",
+                          transform(value) {
+                            return Number(value);
+                          },
                         },
                       ]}
                     >
@@ -225,9 +238,22 @@ function AddKM() {
                       rules={[
                         {
                           required: true,
+                          message: "Phần trăm giảm là bắt buộc.",
                         },
                         {
-                          validateNumber,
+                          type: "number",
+                          message: "Phần trăm giảm phải là một số.",
+                          transform(value) {
+                            return Number(value);
+                          },
+                        },
+                        {
+                          type: "number",
+                          min: 1,
+                          message: "Phần trăm giảm phải lớn hơn hoặc bằng 1.",
+                          transform(value) {
+                            return Number(value);
+                          },
                         },
                       ]}
                     >
