@@ -191,9 +191,22 @@ function AddKM() {
                       rules={[
                         {
                           required: true,
+                          message: "Điều kiện là bắt buộc.",
                         },
                         {
-                          validateNumber,
+                          type: "number",
+                          message: "Điều kiện phải là một số.",
+                          transform(value) {
+                            return Number(value);
+                          },
+                        },
+                        {
+                          type: "number",
+                          min: 0,
+                          message: "Điều kiện không thể âm",
+                          transform(value) {
+                            return Number(value);
+                          },
                         },
                       ]}
                     >
