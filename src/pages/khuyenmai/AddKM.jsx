@@ -102,6 +102,20 @@ function AddKM() {
       });
     }
   }, [id, form, dispatch]);
+
+  const validateNumber = (rule, value) => {
+    if (!value) {
+      return Promise.resolve();
+    }
+    if (isNaN(value)) {
+      return Promise.reject("Giá trị phải là một số");
+    }
+    if (value < 0) {
+      return Promise.reject("Số lượng không thể nhỏ hơn 0");
+    }
+    return Promise.resolve();
+  };
+
   return (
     <div className="add-category">
       <div
@@ -178,6 +192,9 @@ function AddKM() {
                         {
                           required: true,
                         },
+                        {
+                          validateNumber,
+                        },
                       ]}
                     >
                       <Input />
@@ -190,6 +207,9 @@ function AddKM() {
                       rules={[
                         {
                           required: true,
+                        },
+                        {
+                          validateNumber,
                         },
                       ]}
                     >
@@ -205,6 +225,9 @@ function AddKM() {
                       rules={[
                         {
                           required: true,
+                        },
+                        {
+                          validateNumber,
                         },
                       ]}
                     >

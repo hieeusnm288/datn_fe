@@ -103,6 +103,7 @@ function Dashboard({ children }) {
                   key: "5",
                   icon: <TbBrandShopee />,
                   label: "Quản Lý Sản Phẩm",
+                  disabled: role === 2 ? false : true,
                   children: [
                     {
                       key: "6",

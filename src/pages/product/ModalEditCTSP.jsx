@@ -30,7 +30,18 @@ function ModalEditCTSP({ visible, onCancel, data }) {
     }
   }, [listCTSanPham]);
 
-  console.log(listCTSanPham);
+  const validateNumber = (rule, value) => {
+    if (!value) {
+      return Promise.resolve();
+    }
+    if (isNaN(value)) {
+      return Promise.reject("Giá trị phải là một số");
+    }
+    if (value < 0) {
+      return Promise.reject("Số lượng không thể nhỏ hơn 0");
+    }
+    return Promise.resolve();
+  };
   const onFinish = (values) => {
     console.log(values);
     form.validateFields().then((values) => {
@@ -94,6 +105,9 @@ function ModalEditCTSP({ visible, onCancel, data }) {
                       required: true,
                       message: "Không được bỏ trống",
                     },
+                    {
+                      validateNumber,
+                    },
                   ]}
                   style={{ width: "33%" }}
                 >
@@ -106,6 +120,9 @@ function ModalEditCTSP({ visible, onCancel, data }) {
                     {
                       required: true,
                       message: "Không bỏ trống",
+                    },
+                    {
+                      validateNumber,
                     },
                   ]}
                   style={{ width: "33%" }}

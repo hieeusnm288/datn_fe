@@ -96,6 +96,19 @@ function AddDetailProduct() {
     });
   };
 
+  const validateNumber = (rule, value) => {
+    if (!value) {
+      return Promise.resolve();
+    }
+    if (isNaN(value)) {
+      return Promise.reject("Giá trị phải là một số");
+    }
+    if (value < 0) {
+      return Promise.reject("Số lượng không thể nhỏ hơn 0");
+    }
+    return Promise.resolve();
+  };
+
   return (
     <>
       <div className="add-category">
@@ -185,6 +198,9 @@ function AddDetailProduct() {
                                   required: true,
                                   message: "Không được bỏ trống",
                                 },
+                                {
+                                  validateNumber,
+                                },
                               ]}
                               style={{ width: "33%" }}
                             >
@@ -197,6 +213,9 @@ function AddDetailProduct() {
                                 {
                                   required: true,
                                   message: "Không bỏ trống",
+                                },
+                                {
+                                  validateNumber,
                                 },
                               ]}
                               style={{ width: "33%" }}
