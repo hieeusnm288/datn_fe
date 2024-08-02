@@ -76,6 +76,7 @@ function Dashboard({ children }) {
                   key: "1",
                   icon: <AiOutlineHome />,
                   label: "Dashboard",
+
                   onClick: () => navigate("/admin/dashboard"),
                 },
                 {
@@ -123,6 +124,7 @@ function Dashboard({ children }) {
                   key: "8",
                   icon: <BiLogoShopify />,
                   label: "Quản Lý Thương Hiệu",
+                  disabled: role === 2 ? false : true,
                   children: [
                     {
                       key: "9",
@@ -142,6 +144,7 @@ function Dashboard({ children }) {
                   key: "12",
                   icon: <BiCategoryAlt />,
                   label: "Quản Lý Khuyến Mại",
+                  disabled: role === 2 ? false : true,
                   children: [
                     {
                       key: "13",
@@ -161,6 +164,7 @@ function Dashboard({ children }) {
                   key: "15",
                   icon: <BiCategoryAlt />,
                   label: "Quản Lý Đế Giày",
+                  disabled: role === 2 ? false : true,
                   children: [
                     {
                       key: "16",
@@ -180,6 +184,7 @@ function Dashboard({ children }) {
                   key: "18",
                   icon: <BiCategoryAlt />,
                   label: "Quản Lý Kích Cỡ",
+                  disabled: role === 2 ? false : true,
                   children: [
                     {
                       key: "19",
@@ -199,6 +204,7 @@ function Dashboard({ children }) {
                   key: "20",
                   icon: <BiCategoryAlt />,
                   label: "Quản Lý Màu Sắc",
+                  disabled: role === 2 ? false : true,
                   children: [
                     {
                       key: "21",
@@ -218,6 +224,7 @@ function Dashboard({ children }) {
                   key: "23",
                   icon: <BiCategoryAlt />,
                   label: "Phương Thức Thanh Toán",
+                  disabled: role === 2 ? false : true,
                   children: [
                     {
                       key: "24",
@@ -237,6 +244,7 @@ function Dashboard({ children }) {
                   key: "26",
                   icon: <BiCategoryAlt />,
                   label: "Quản Lý Khách Hàng",
+                  disabled: role === 2 ? false : true,
                   children: [
                     {
                       key: "27",
