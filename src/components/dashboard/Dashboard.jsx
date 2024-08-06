@@ -76,7 +76,6 @@ function Dashboard({ children }) {
                   key: "1",
                   icon: <AiOutlineHome />,
                   label: "Dashboard",
-
                   onClick: () => navigate("/admin/dashboard"),
                 },
                 {
