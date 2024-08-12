@@ -70,7 +70,6 @@ function Dashboard({ children }) {
           <div className="slide-bar-menu mt-3">
             <Menu
               mode="inline"
-              // defaultSelectedKeys={["1"]}
               items={[
                 {
                   key: "1",
@@ -219,26 +218,26 @@ function Dashboard({ children }) {
                     },
                   ],
                 },
-                {
-                  key: "23",
-                  icon: <BiCategoryAlt />,
-                  label: "Phương Thức Thanh Toán",
-                  disabled: role === 2 ? false : true,
-                  children: [
-                    {
-                      key: "24",
-                      icon: <IoMdAddCircleOutline />,
-                      label: "Thêm Phương Thức",
-                      onClick: () => navigate("/admin/pttt/add"),
-                    },
-                    {
-                      key: "25",
-                      icon: <FaRegListAlt />,
-                      label: "Danh Sách Phương Thức",
-                      onClick: () => navigate("/admin/list-pttt"),
-                    },
-                  ],
-                },
+                // {
+                //   key: "23",
+                //   icon: <BiCategoryAlt />,
+                //   label: "Phương Thức Thanh Toán",
+                //   disabled: role === 2 ? false : true,
+                //   children: [
+                //     {
+                //       key: "24",
+                //       icon: <IoMdAddCircleOutline />,
+                //       label: "Thêm Phương Thức",
+                //       onClick: () => navigate("/admin/pttt/add"),
+                //     },
+                //     {
+                //       key: "25",
+                //       icon: <FaRegListAlt />,
+                //       label: "Danh Sách Phương Thức",
+                //       onClick: () => navigate("/admin/list-pttt"),
+                //     },
+                //   ],
+                // },
                 {
                   key: "26",
                   icon: <BiCategoryAlt />,

@@ -26,8 +26,8 @@ export const getTongHoaTheoThang = createAsyncThunk(
   "thongke/getTongHoaDonHT",
   async (data) => {
     const tonghoadon = await thongkeService.thongKeHoaDonTheoThang(
-      data.month,
-      data.year
+      data.start,
+      data.end
     );
     return tonghoadon;
   }
@@ -37,8 +37,8 @@ export const getTongHoaDonHTByThang = createAsyncThunk(
   "thongke/getTongHoaDonHT",
   async (data) => {
     const tonghoadon = await thongkeService.thongKeHoaDoHTTheoThang(
-      data.month,
-      data.year
+      data.start,
+      data.end
     );
     return tonghoadon;
   }
@@ -46,8 +46,11 @@ export const getTongHoaDonHTByThang = createAsyncThunk(
 
 export const getSanPhamBanChay = createAsyncThunk(
   "thongke/getTongHoaDonHT",
-  async () => {
-    const tonghoadon = await thongkeService.thongKeSanPhamBanChay();
+  async (data) => {
+    const tonghoadon = await thongkeService.thongKeSanPhamBanChay(
+      data.month,
+      data.year
+    );
     return tonghoadon;
   }
 );

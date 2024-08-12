@@ -106,6 +106,7 @@ function ListNhanVien() {
             onClick={() => handleEdit(record)}
             type="primary"
             icon={<MdModeEditOutline />}
+            disabled={record.username === "admin" ? true : false}
           >
             Edit
           </Button>
@@ -114,6 +115,7 @@ function ListNhanVien() {
             type="primary"
             danger="true"
             icon={<MdDelete />}
+            disabled={record.username === "admin" ? true : false}
           >
             Delete
           </Button>

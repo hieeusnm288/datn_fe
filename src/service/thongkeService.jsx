@@ -8,22 +8,24 @@ const thongkeService = {
   thongKeHoaDonTheoNam(year) {
     return axiosLogin.get(`/thongke/hoadontheonam/${year}`);
   },
-  thongKeHoaDonTheoThang(month, year) {
+  thongKeHoaDonTheoThang(start, end) {
     return axiosLogin.get(
-      `/thongke/hoadontheothang/find?month=${month}&year=${year}`
+      `/thongke/hoadontheothang/find?startDate=${start}&endDate=${end}`
     );
   },
   thongKeHoaDoHTTheoNam(year) {
     return axiosLogin.get(`/thongke/hoadontheonam-ht/${year}`);
   },
-  thongKeHoaDoHTTheoThang(month, year) {
+  thongKeHoaDoHTTheoThang(start, end) {
     return axiosLogin.get(
-      `/thongke/hoadontheothang-ht/find?month=${month}&year=${year}`
+      `/thongke/hoadontheothang-ht/find?startDate=${start}&endDate=${end}`
     );
   },
 
-  thongKeSanPhamBanChay() {
-    return axiosLogin.get("/thongke/sanphambanchay");
+  thongKeSanPhamBanChay(month, year) {
+    return axiosLogin.get(
+      `/thongke/sanphambanchay/find?month=${month}&year=${year}`
+    );
   },
 
   thongKeSanSapHet() {

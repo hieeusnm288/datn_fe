@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Card } from "antd";
+import { Card, DatePicker } from "antd";
 import {
   Bar,
   BarChart,
   CartesianGrid,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -23,6 +21,7 @@ import {
   getTongKhachHnang,
 } from "../../redux/slice/thongkeSlice";
 import { useDispatch, useSelector } from "react-redux";
+const { RangePicker } = DatePicker;
 const { Meta } = Card;
 function DashboardPage() {
   const dispatch = useDispatch();
@@ -62,37 +61,37 @@ function DashboardPage() {
     });
   }, [dispatch]);
 
-  useEffect(() => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    dispatch(
-      getTongHoaDonHTByThang({
-        month: month,
-        year: year,
-      })
-    ).then((res) => {
-      if (res?.payload?.result) {
-        setHoaDonHoanThanhMonth(res?.payload?.result);
-      }
-    });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const now = new Date();
+  //   const year = now.getFullYear();
+  //   const month = now.getMonth() + 1;
+  //   dispatch(
+  //     getTongHoaDonHTByThang({
+  //       month: month,
+  //       year: year,
+  //     })
+  //   ).then((res) => {
+  //     if (res?.payload?.result) {
+  //       setHoaDonHoanThanhMonth(res?.payload?.result);
+  //     }
+  //   });
+  // }, [dispatch]);
 
-  useEffect(() => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    dispatch(
-      getTongHoaTheoThang({
-        month: month,
-        year: year,
-      })
-    ).then((res) => {
-      if (res?.payload?.result) {
-        setHoaDonTongMonth(res?.payload?.result);
-      }
-    });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const now = new Date();
+  //   const year = now.getFullYear();
+  //   const month = now.getMonth() + 1;
+  //   dispatch(
+  //     getTongHoaTheoThang({
+  //       month: month,
+  //       year: year,
+  //     })
+  //   ).then((res) => {
+  //     if (res?.payload?.result) {
+  //       setHoaDonTongMonth(res?.payload?.result);
+  //     }
+  //   });
+  // }, [dispatch]);
 
   useEffect(() => {
     dispatch(getTongKhachHnang()).then((res) => {
@@ -103,7 +102,15 @@ function DashboardPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getSanPhamBanChay()).then((res) => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    dispatch(
+      getSanPhamBanChay({
+        month: month,
+        year: year,
+      })
+    ).then((res) => {
       if (res?.payload?.result) {
         setListSanPhamBanChay(res?.payload?.result);
       }
@@ -118,8 +125,28 @@ function DashboardPage() {
     });
   }, [dispatch]);
 
-  console.log("Bán Chạy: ", listSanPhamBanChay);
-  console.log("Sắp Hết: ", listSanPhamSapHet);
+  const onChangeDate = (dates, dateStrings) => {
+    dispatch(
+      getTongHoaDonHTByThang({
+        start: dateStrings[0],
+        end: dateStrings[1],
+      })
+    ).then((res) => {
+      if (res?.payload?.result) {
+        setHoaDonHoanThanhMonth(res?.payload?.result);
+      }
+    });
+    dispatch(
+      getTongHoaTheoThang({
+        start: dateStrings[0],
+        end: dateStrings[1],
+      })
+    ).then((res) => {
+      if (res?.payload?.result) {
+        setHoaDonTongMonth(res?.payload?.result);
+      }
+    });
+  };
 
   return (
     <div className="dashborad-page">
@@ -217,7 +244,8 @@ function DashboardPage() {
               <div className="row">
                 <div>
                   <div className="fs-4 fw-bold text-primary">
-                    Tổng Hóa Đơn Trong Tháng
+                    Tổng Hóa Đơn Trong Khoảng Thời Gian
+                    <RangePicker onChange={onChangeDate} />
                   </div>
                   <div className="content-text fs-5">
                     Tổng Hóa Đơn:{" "}
@@ -238,8 +266,8 @@ function DashboardPage() {
         </div>
       </div>
       <div className="mt-3">
-        <h5>Sản Phẩm Bán Chạy</h5>
-        <div className="d-flex justify-content-between">
+        <h5>Sản Phẩm Bán Nhiều Trong Tháng</h5>
+        <div className="d-flex" style={{ gap: 20 }}>
           {listSanPhamBanChay?.map((i) => (
             <Card
               style={{
@@ -264,7 +292,7 @@ function DashboardPage() {
       </div>
       <div className="mt-3">
         <h5>Sản Phẩm Sắp Hết</h5>
-        <div className="d-flex justify-content-between">
+        <div className="d-flex" style={{ gap: 20 }}>
           {listSanPhamSapHet?.map((i) => (
             <Card
               style={{
