@@ -49,11 +49,16 @@ function Dashboard({ children }) {
     if (token) {
       const userData = jwtDecode(token);
       if (userData) {
+        console.log(userData);
         setUsername(userData.sub + "");
         setRole(userData.role);
         setTenNhanVien(userData.tennhanvien);
         localStorage.setItem("username", JSON.stringify(userData.sub + ""));
         localStorage.setItem("role", JSON.stringify(userData.role + ""));
+        localStorage.setItem(
+          "idNhanVien",
+          JSON.stringify(userData.idNhanVien + "")
+        );
       }
     }
   }, []);

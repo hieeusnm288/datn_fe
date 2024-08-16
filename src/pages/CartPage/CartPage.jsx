@@ -245,6 +245,7 @@ function CartPage() {
             diachi: valueDC,
             idTrangThaiDonHang: 1,
             idPhuongThucThanhToan: valuePTTT,
+            idNhanVien: null,
           })
         ).then((res) => {
           if (res?.payload?.result) {

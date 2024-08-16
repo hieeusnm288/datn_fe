@@ -88,6 +88,7 @@ function ListOrderAdmin() {
         diachi: detailHoaDon.diachi,
         idPhuongThucThanhToan: detailHoaDon.phuongThucThanhToan.id,
         idTrangThaiDonHang: value,
+        idNhanVien: localStorage.getItem("idNhanVien").slice(1, -1),
       })
     ).then((res) => {
       if (res?.payload?.result) {
@@ -357,6 +358,10 @@ function ListOrderAdmin() {
             <p style={{ fontSize: "18px" }} className="mt-1">
               <b>Ngày Tạo: </b>
               {moment(detailHoaDon?.ngaytao).format("DD/MM/YYYY")}
+            </p>
+            <p style={{ fontSize: "18px" }} className="mt-1">
+              <b>Cập nhật bởi: </b>
+              {detailHoaDon?.nhanVien?.username}
             </p>
           </div>
         </div>
