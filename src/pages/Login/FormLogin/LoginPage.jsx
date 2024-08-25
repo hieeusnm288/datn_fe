@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "./loginstyle.scss";
 import { useDispatch } from "react-redux";
 import { loginNhanVien } from "../../../redux/slice/nhanvienSlice";
+import { jwtDecode } from "jwt-decode";
+
 function LoginPage() {
   const dispatch = useDispatch();
   const onFinish = (values) => {
@@ -15,7 +17,12 @@ function LoginPage() {
           type: "success",
         });
         localStorage.setItem("token", JSON.stringify(res.payload.jwt));
-        navigate("/admin/dashboard");
+        const userData = jwtDecode(res.payload.jwt);
+        if (userData.role !== 2) {
+          navigate("/admin/invoice");
+        } else {
+          navigate("/admin/dashboard");
+        }
         window.location.reload();
       } else {
         notification.open({

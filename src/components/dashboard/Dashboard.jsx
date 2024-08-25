@@ -80,6 +80,7 @@ function Dashboard({ children }) {
                   key: "1",
                   icon: <AiOutlineHome />,
                   label: "Dashboard",
+                  disabled: role === 2 ? false : true,
                   onClick: () => navigate("/admin/dashboard"),
                 },
                 {
@@ -223,26 +224,6 @@ function Dashboard({ children }) {
                     },
                   ],
                 },
-                // {
-                //   key: "23",
-                //   icon: <BiCategoryAlt />,
-                //   label: "Phương Thức Thanh Toán",
-                //   disabled: role === 2 ? false : true,
-                //   children: [
-                //     {
-                //       key: "24",
-                //       icon: <IoMdAddCircleOutline />,
-                //       label: "Thêm Phương Thức",
-                //       onClick: () => navigate("/admin/pttt/add"),
-                //     },
-                //     {
-                //       key: "25",
-                //       icon: <FaRegListAlt />,
-                //       label: "Danh Sách Phương Thức",
-                //       onClick: () => navigate("/admin/list-pttt"),
-                //     },
-                //   ],
-                // },
                 {
                   key: "26",
                   icon: <BiCategoryAlt />,
@@ -299,115 +280,6 @@ function Dashboard({ children }) {
         </header>
         <div className="container mt-3">{children}</div>
       </div>
-      {/* <Layout>
-        <Sider trigger={null} collapsible className="fix-top" width={300}>
-          <div className="demo-logo-vertical" />
-          <Menu
-            theme="dark"
-            mode="inline"
-            // defaultSelectedKeys={["1"]}
-            items={[
-              {
-                key: "1",
-                icon: <AiOutlineHome />,
-                label: "Home",
-                onClick: () => navigate("/"),
-              },
-              {
-                key: "2",
-                icon: <BiCategoryAlt />,
-                label: "Categories",
-                children: [
-                  {
-                    key: "3",
-                    icon: <IoMdAddCircleOutline />,
-                    label: "Add Category",
-                    onClick: () => navigate("/admin/category/add"),
-                  },
-                  {
-                    key: "4",
-                    icon: <FaRegListAlt />,
-                    label: "List Categories",
-                    onClick: () => navigate("/admin/list-category"),
-                  },
-                ],
-              },
-              {
-                key: "5",
-                icon: <TbBrandShopee />,
-                label: "Products",
-                children: [
-                  {
-                    key: "6",
-                    icon: <IoMdAddCircleOutline />,
-                    label: "Add Product",
-                  },
-                  {
-                    key: "7",
-                    icon: <FaRegListAlt />,
-                    label: "List Products",
-                  },
-                ],
-              },
-              {
-                key: "8",
-                icon: <BiLogoShopify />,
-                label: "Brands",
-                children: [
-                  {
-                    key: "9",
-                    icon: <IoMdAddCircleOutline />,
-                    label: "Add Brand",
-                    onClick: () => navigate("/brand/add"),
-                  },
-                  {
-                    key: "10",
-                    icon: <FaRegListAlt />,
-                    label: "List Brands",
-                    onClick: () => navigate("/list-brands"),
-                  },
-                ],
-              },
-              {
-                key: "11",
-                icon: <LiaFileInvoiceDollarSolid />,
-                label: "Invoice",
-              },
-            ]}
-          />
-        </Sider>
-        <Layout className="fix-content">
-          <Header
-            style={{
-              padding: 0,
-              background: colorBgContainer,
-            }}
-          >
-            <Row>
-              <Col md={20}>
-                <h1>Personal Project: Store Management</h1>
-              </Col>
-              <Col md={4}>
-                <div>
-                  <Avatar icon={<UserOutlined />}></Avatar> Nguyễn Minh Hiếu
-                </div>
-              </Col>
-            </Row>
-          </Header>
-          <Content
-            style={{
-              margin: "24px 16px",
-              padding: 24,
-              minHeight: 280,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            {children}
-            <Outlet></Outlet>
-          </Content>
-        </Layout>
-      </Layout> */}
     </div>
   );
 }
