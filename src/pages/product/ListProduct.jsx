@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { getListSanPham } from "../../redux/slice/sanphamSlice";
-import { Button, Space, Table, Modal, Tag, notification, Image } from "antd";
+import {
+  Button,
+  Space,
+  Table,
+  Modal,
+  Tag,
+  notification,
+  Image,
+  Pagination,
+} from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { MdModeEditOutline } from "react-icons/md";
 // import { useNavigate } from "react-router-dom";
@@ -9,19 +18,38 @@ import { EyeOutlined } from "@ant-design/icons";
 import ModalChiTietSP from "./ModalChiTietSP";
 
 function ListProduct() {
-  const { listSanPham, totalElements } = useSelector((state) => state.sanpham);
+  const { listSanPham } = useSelector((state) => state.sanpham);
   const [sanPhamDeatil, setSanPhamDetail] = useState();
   const [showModalUpdate, setShowModalUpdate] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
+  const [listProduct, setListProduct] = useState();
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [search, setSearch] = useState({
     name: "",
     status: 2,
     thuongHieu: "",
+    page: 0,
   });
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getListSanPham(search));
+    dispatch(getListSanPham(search)).then((res) => {
+      if (res?.payload?.result) {
+        setListProduct(res?.payload?.result.content);
+        setTotalElements(res?.payload?.result.page.totalElements);
+        setTotalPages(res?.payload?.result.page.totalPages);
+      }
+    });
   }, [dispatch, search]);
+
+  const conChangePage = (page) => {
+    setSearch({
+      name: "",
+      status: 2,
+      thuongHieu: "",
+      page: page - 1,
+    });
+  };
 
   const openModalUpdate = (record) => {
     setSanPhamDetail(record);
@@ -38,7 +66,13 @@ function ListProduct() {
   const cancelModalUpdate = () => {
     setSanPhamDetail(null);
     setShowModalUpdate(false);
-    dispatch(getListSanPham(search));
+    dispatch(getListSanPham(search)).then((res) => {
+      if (res?.payload?.result) {
+        setListProduct(res?.payload?.result.content);
+        setTotalElements(res?.payload?.result.page.totalElements);
+        setTotalPages(res?.payload?.result.page.totalPages);
+      }
+    });
   };
   const columns = [
     {
@@ -78,10 +112,10 @@ function ListProduct() {
       width: 300,
       render: (_, record) => (
         <Tag
-          color={record.trangthai == 1 ? "green" : "red"}
+          color={record.trangthai === 1 ? "green" : "red"}
           key={record.status}
         >
-          {record.trangthai == 1 ? "Visible" : "Invisible"}
+          {record.trangthai === 1 ? "Visible" : "Invisible"}
         </Tag>
       ),
     },
@@ -111,7 +145,15 @@ function ListProduct() {
   return (
     <>
       <p>List Product</p>
-      <Table columns={columns} dataSource={listSanPham} pagination={false} />
+      <Table columns={columns} dataSource={listProduct} pagination={false} />
+      <Pagination
+        onChange={conChangePage}
+        className="mt-3"
+        defaultCurrent={1}
+        total={totalElements}
+        size={8}
+        style={{ float: "right" }}
+      />
       <ModalEditSanPham
         visible={showModalUpdate}
         onCancel={cancelModalUpdate}

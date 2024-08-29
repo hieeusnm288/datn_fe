@@ -63,7 +63,7 @@ const sanphamSlice = createSlice({
       .addCase(getListSanPham.fulfilled, (state, action) => {
         state.loadingCate = false;
         // console.log(action);
-        state.listSanPham = action.payload.result;
+        state.listSanPham = action.payload.result.content;
         state.totalPages = action.payload.totalPages;
         state.number = action.payload.number;
         state.totalElements = action.payload.totalElements;

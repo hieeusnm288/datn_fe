@@ -23,7 +23,6 @@ function ModalEditSanPham({ visible, onCancel, data }) {
 
   const onFinish = (values) => {
     form.validateFields().then((values) => {
-      console.log(values);
       dispatch(
         updateSanPham({
           idSanPham: data.idSanPham,

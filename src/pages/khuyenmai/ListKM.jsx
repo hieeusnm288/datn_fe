@@ -130,14 +130,14 @@ function ListKM() {
           >
             Edit
           </Button>
-          <Button
+          {/* <Button
             onClick={() => showModal(record)}
             type="primary"
             danger="true"
             icon={<MdDelete />}
           >
             Delete
-          </Button>
+          </Button> */}
         </Space>
       ),
     },

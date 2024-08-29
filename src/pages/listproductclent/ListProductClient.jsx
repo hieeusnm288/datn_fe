@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getListSanPham } from "../../redux/slice/sanphamSlice";
 import CradProduct from "../../components/crads/CradProduct";
-import { Button, Input, Space } from "antd";
+import { Button, Input, Pagination, Space } from "antd";
 function ListProductClient() {
   const { slug } = useParams();
   const [search, setSearch] = useState();
@@ -12,7 +12,7 @@ function ListProductClient() {
   const dispatch = useDispatch();
   const params = new URLSearchParams(slug);
   const obj = Object.fromEntries(params);
-
+  const [totalElements, setTotalElements] = useState(0);
   useEffect(() => {
     if (!slug || !obj?.brandId) {
       dispatch(
@@ -20,19 +20,38 @@ function ListProductClient() {
           name: "",
           status: 2,
           thuongHieu: "",
+          page: 0,
         })
-      );
+      ).then((res) => {
+        if (res?.payload?.result) {
+          setTotalElements(res?.payload?.result.page.totalElements);
+        }
+      });
     } else {
       dispatch(
         getListSanPham({
           name: "",
           thuongHieu: obj?.brandId,
           status: 2,
+          page: 0,
         })
-      );
+      ).then((res) => {
+        if (res?.payload?.result) {
+          setTotalElements(res?.payload?.result.page.totalElements);
+        }
+      });
     }
   }, [dispatch, slug, obj?.brandId]);
-
+  const conChangePage = (page) => {
+    dispatch(
+      getListSanPham({
+        name: "",
+        status: 2,
+        thuongHieu: "",
+        page: page - 1,
+      })
+    );
+  };
   const conChange = (e) => {
     setSearch(e.target.value);
   };
@@ -43,6 +62,7 @@ function ListProductClient() {
         name: search,
         status: 2,
         thuongHieu: "",
+        page: 0,
       })
     );
   };
@@ -71,6 +91,14 @@ function ListProductClient() {
             </div>
           ))}
       </div>
+      <Pagination
+        onChange={conChangePage}
+        className="mt-3"
+        defaultCurrent={1}
+        total={totalElements}
+        size={8}
+        style={{ float: "right" }}
+      />
     </div>
   );
 }

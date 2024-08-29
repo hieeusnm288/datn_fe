@@ -372,7 +372,7 @@ function CartPage() {
                     khachHang ? khachHang.tenkhachhang.trimEnd() : ""
                   }
                 >
-                  <Input />
+                  <Input disabled="true" />
                 </Form.Item>
 
                 <Form.Item
@@ -388,7 +388,7 @@ function CartPage() {
                     khachHang ? khachHang.sodienthoai.trimEnd() : ""
                   }
                 >
-                  <Input />
+                  <Input disabled="true" />
                 </Form.Item>
                 <Form.Item
                   label="Email"
@@ -401,7 +401,7 @@ function CartPage() {
                   ]}
                   initialValue={khachHang ? khachHang.email.trimEnd() : ""}
                 >
-                  <Input />
+                  <Input disabled="true" />
                 </Form.Item>
                 <Form.Item
                   label="Chọn Địa Chỉ"

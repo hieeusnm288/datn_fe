@@ -4,7 +4,7 @@ import axiosLogin from "./loginaxios";
 const sanphamService = {
   getListSanPham(data) {
     return axiosLogin.get(
-      `/sanpham/search?name=${data.name}&trangthai=${data.status}&idThuongHieu=${data.thuongHieu}`
+      `/sanpham/search?name=${data.name}&trangthai=${data.status}&idThuongHieu=${data.thuongHieu}&page=${data.page}&size=8`
     );
   },
   addSanPham(data) {
