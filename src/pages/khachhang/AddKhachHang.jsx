@@ -87,7 +87,7 @@ function AddKhachHang() {
             tenkhachhang: res?.payload?.result.tenkhachhang.trimEnd(),
             username: res?.payload?.result.username.trimEnd(),
             password: res?.payload?.result.password,
-            email: res?.payload?.result.email,
+            email: res?.payload?.result.email.trimEnd(),
             sodienthoai: res?.payload?.result.sodienthoai.trimEnd(),
             ngaysinh: moment(date),
             gioitinh: res?.payload?.result.gioitinh,
